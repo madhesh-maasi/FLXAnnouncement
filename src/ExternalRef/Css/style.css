@@ -70,6 +70,12 @@
   background-size: contain;
   background-repeat: no-repeat;
 }
+.announce-new {
+  background: url(../images/DocImage.png);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
 .announcement-list {
   max-height: 20rem;
   overflow-y: auto;
@@ -150,4 +156,18 @@ button.btn.btn-theme {
 }
 label.btn.btn-outline-theme {
   padding: 0.375rem 0.75rem !important;
+}
+.cursor{
+  cursor: pointer;
+}
+.icon-edit {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: 50%;
+}
+.icon-edit {
+  background-image: url("../../ExternalRef/images/pencil.png");
 }

@@ -36,11 +36,11 @@ var urlFile = "";
 var updateUrlFile = "";
 export interface IFlxannouncementsWebPartProps { 
   description: string;
-  listName:string;
-  headertitle:string;
+  //listName:string;
+  //headertitle:string;
 }
-var listname="";
-var headerTitle="";
+//var listname="";
+//var headerTitle="";
 let SelectedFileName = ""
 export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxannouncementsWebPartProps> {
   private lists:IPropertyPaneDropdownOption[]= [];
@@ -54,8 +54,8 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
   public render(): void {   
     siteURL = this.context.pageContext.web.absoluteUrl;
-    listname = this.properties.listName;
-    headerTitle=this.properties.headertitle
+    //listname = this.properties.listName;
+    //headerTitle=this.properties.headertitle
     this.domElement.innerHTML = `  
     <div class="cont"> 
      
@@ -246,7 +246,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     </div> 
     </div>
       `;    
-      $("#headerTitle").text(headerTitle)
+      //$("#headerTitle").text(headerTitle)
       $("#AnABtnDelete").click(()=>{
         $(".announcement-modal-dialog").hide();
       });
@@ -278,7 +278,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
               }
                   });
 
-      getFLXAnnouncement();
+      getFLXAnnouncements();
       $("#btnsubmit").click(async function()
       {
       await addItems();
@@ -295,14 +295,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
       
       $("#edittitle").val(allitems[editdata].Title);
       $("#editurl").val(allitems[editdata].Url); 
-      // let files = await sp.web.getFolderByServerRelativeUrl(`/sites/FLXCommunity/AnnouncementDocument/`).files.get();
-      // console.log(files);
-      // let SelectedFile = files.filter((fi)=>{})
-      // Maasi
-      // $("#attachurl").val(allitems[editdata].Url);
-      //allitems[editdata].SensitiveDocument=true ? ($("#editsensitive").is(':checked')) : ($("#editsensitive").not(':checked')),
-      //$("#editsensitive").val(allitems[editdata].SensitiveDocument = true ? ($("#editsensitive").is(':checked')) : ($("#editsensitive").not(':checked'))),
-      //$("#editsensitive").attr(':checked');
+   
       if(allitems[editdata].UrlOrFile == "File"){
         SelectedFileName = allitems[editdata].Url.split('/').pop();
         $(".uploadedFile").html("");
@@ -445,13 +438,13 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
   }
 }
 
-async function getFLXAnnouncement()
+async function getFLXAnnouncements()
 {
 
 
-  if(listname)
-  {
-    await sp.web.lists.getByTitle(listname).items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
+  // if(FLXAnnouncement)
+  // {
+    await sp.web.lists.getByTitle("FLXAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
     {
   var htmlforannouncement="";
   allitems=item;
@@ -587,11 +580,11 @@ async function getFLXAnnouncement()
       console.log(error);
     });
   }
-  else{
-    $("#announcement-one").html("");
-  $("#announcement-one").html(`<li class="py-2 px-4 d-flex align-items-center row">No data to display or Please select list name</li>`);
-  }
-  }
+  // else{
+  //   $("#announcement-one").html("");
+  // $("#announcement-one").html(`<li class="py-2 px-4 d-flex align-items-center row">No data to display or Please select list name</li>`);
+  // }
+  // }
 
   
 
@@ -600,7 +593,7 @@ async function getFLXAnnouncement()
      if (Fileupload.length > 0) {
       await Fileupload.map((filedata) => {
             sp.web
-              .getFolderByServerRelativeUrl("/sites/FLXCommunity/AnnouncementDocument/")
+              .getFolderByServerRelativeUrl("/sites/FLXCommunity/AnnouncementDocument/FLXAnnouncements")
               .files.add(filedata.name, filedata, true)
               .then (function(data){
                 console.log(data);
@@ -619,7 +612,7 @@ async function getFLXAnnouncement()
                   UrlOrFile:urlFile
                 };
                 sp.web.lists
-                .getByTitle(listname)
+                .getByTitle("FLXAnnouncements")
                 .items.add(requestdata)
                 .then(function (data) {
                   console.log(data);
@@ -649,7 +642,7 @@ async function getFLXAnnouncement()
         UrlOrFile:urlFile
       };
       sp.web.lists
-      .getByTitle(listname)
+      .getByTitle("FLXAnnouncements")
       .items.add(requestdata)
       .then(function (data) {
         console.log(data);
@@ -671,7 +664,7 @@ console.log(FileuploadEdit);
      if (FileuploadEdit.length > 0) {
       await FileuploadEdit.map((filedata) => {
             sp.web
-              .getFolderByServerRelativeUrl("/sites/FLXCommunity/AnnouncementDocument/")
+              .getFolderByServerRelativeUrl("/sites/FLXCommunity/AnnouncementDocument/FLXAnnouncements")
               .files.add(filedata.name, filedata, true)
               .then (function(data){
                 console.log(data);
@@ -689,7 +682,7 @@ console.log(FileuploadEdit);
                   UrlOrFile:updateUrlFile
                 };
                 sp.web.lists
-                .getByTitle(listname)
+                .getByTitle("FLXAnnouncement")
                 .items.getById(Id).update(requestdata)
                 .then(function (data) {
                   console.log(data);
@@ -717,7 +710,7 @@ console.log(FileuploadEdit);
         UrlOrFile:updateUrlFile
       };
       sp.web.lists
-      .getByTitle(listname)
+      .getByTitle("FLXAnnouncements")
       .items.getById(Id).update(requestdata)
       .then(function (data) {
         console.log(data);
@@ -741,7 +734,7 @@ console.log(FileuploadEdit);
         UrlOrFile:updateUrlFile
       };
       sp.web.lists
-      .getByTitle(listname)
+      .getByTitle("FLXAnnouncements")
       .items.getById(Id).update(requestdata)
       .then(function (data) {
         console.log(data);
@@ -796,5 +789,5 @@ console.log(FileuploadEdit);
       .set("closable", false);
   }
 const deleteAnA = (id) =>{
-   sp.web.lists.getByTitle(listname).items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+   sp.web.lists.getByTitle("FLXAnnouncements").items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
 }

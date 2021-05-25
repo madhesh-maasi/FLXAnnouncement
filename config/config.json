@@ -9,10 +9,46 @@
           "manifest": "./src/webparts/flxannouncements/FlxannouncementsWebPart.manifest.json"
         }
       ]
+    },
+    "flxwhitepapers-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/flxwhitepapers/FlxwhitepapersWebPart.js",
+          "manifest": "./src/webparts/flxwhitepapers/FlxwhitepapersWebPart.manifest.json"
+        }
+      ]
+    },
+    "flxnewsletter-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/flxnewsletter/FlxnewsletterWebPart.js",
+          "manifest": "./src/webparts/flxnewsletter/FlxnewsletterWebPart.manifest.json"
+        }
+      ]
+    },
+    "flxstatus-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/flxstatus/FlxstatusWebPart.js",
+          "manifest": "./src/webparts/flxstatus/FlxstatusWebPart.manifest.json"
+        }
+      ]
+    },
+    "flxdeals-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/flxdeals/FlxdealsWebPart.js",
+          "manifest": "./src/webparts/flxdeals/FlxdealsWebPart.manifest.json"
+        }
+      ]
     }
   },
   "externals": {},
   "localizedResources": {
-    "FlxannouncementsWebPartStrings": "lib/webparts/flxannouncements/loc/{locale}.js"
+    "FlxannouncementsWebPartStrings": "lib/webparts/flxannouncements/loc/{locale}.js",
+    "FlxwhitepapersWebPartStrings": "lib/webparts/flxwhitepapers/loc/{locale}.js",
+    "FlxnewsletterWebPartStrings": "lib/webparts/flxnewsletter/loc/{locale}.js",
+    "FlxstatusWebPartStrings": "lib/webparts/flxstatus/loc/{locale}.js",
+    "FlxdealsWebPartStrings": "lib/webparts/flxdeals/loc/{locale}.js"
   }
 }

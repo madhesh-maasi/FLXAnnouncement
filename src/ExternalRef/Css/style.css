@@ -196,7 +196,7 @@ label.btn.btn-outline-theme {
 .announcement-list ul {
   overflow-x: hidden;
 }
-#announcement-one a.col-8 {
+.list-unstyled a.col-8 {
   word-break: break-all;
 }
 .ajs-header {

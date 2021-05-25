@@ -1,7 +1,8 @@
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneDropdown,
+  PropertyPaneTextField,IPropertyPaneDropdownOption
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { escape } from '@microsoft/sp-lodash-subset';
@@ -31,13 +32,18 @@ var Fileupload=[];
 var FileuploadEdit=[];
 var allitems=[];
 var editdata='';
-
+var urlFile = "";
+var updateUrlFile = "";
 export interface IFlxannouncementsWebPartProps { 
   description: string;
+  listName:string;
+  headertitle:string;
 }
-  
+var listname="";
+var headerTitle="";
+let SelectedFileName = ""
 export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxannouncementsWebPartProps> {
-
+  private lists:IPropertyPaneDropdownOption[]= [];
   protected onInit(): Promise<void> {
     return super.onInit().then(_ => {
       sp.setup({
@@ -48,11 +54,12 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
   public render(): void {   
     siteURL = this.context.pageContext.web.absoluteUrl;
-
-    this.domElement.innerHTML = `
+    listname = this.properties.listName;
+    headerTitle=this.properties.headertitle
+    this.domElement.innerHTML = `  
     <div class="cont"> 
      
-    <div class="row announcements-section justify-content-center">
+    <div class="row announcements-section">
     <div class="col-6 announcement p-0">
 
     <div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
@@ -60,12 +67,24 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="announcementModalLabel">Add Announcement</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
       </div> 
       <div class="modal-body announcement-modal"> 
         <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="txttitle"></div></div>
-        <div class="row align-items-center my-3"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="txturl"></div></div>
-        <div class="row align-items-center my-3"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="uploadfile"></div></div>
+        
+        
+        <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
+        
+        <label><input type="radio" class="radioc" name="urlFile" id="urlRadio" value="Url"> Url </label>
+        <label><input type="radio"  class="radioc" name="urlFile" id="fileRadio" value="File"> File</label>
+
+
+        
+        </div></div>
+
+
+        <div class="row align-items-center my-3 radioToggle" id="urlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="txturl"></div></div>
+        <div class="row align-items-center my-3 radioToggle" id="fileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="uploadfile"></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Document Type</div><div class="col-1">:</div><div class="col-7">
   
         <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
@@ -96,14 +115,18 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     <div class="modal-header">
       <h5 class="modal-title" id="announcementModalLabel">Edit Announcement</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div> 
+    </div>  
     <div class="modal-body announcement-modal"> 
       <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="edittitle"></div></div>
-      <div class="row align-items-center my-3"><div class="col-4">Attachment URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="attachurl"></div></div>
-      <div class="row align-items-center my-3"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="editurl"></div></div>
-      <div class="row align-items-center my-3"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="uploadfileedit"></div></div>
+      <!--<div class="row align-items-center my-3"><div class="col-4">Attachment URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="attachurl"></div></div>-->
+      <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
+        <label><input type="radio" class="Eradioc" name="EurlFile" id="EurlRadio" value="Url"> Url </label>
+        <label><input type="radio"  class="Eradioc" name="EurlFile" id="EfileRadio" value="File"> File</label>
+        </div></div>
+      <div class="row align-items-center my-3" id="EurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="editurl"></div></div>
+      <div class="row align-items-start my-3" id="EfileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7" id="editFUploadSec"><div><input class="form-control-file custom-file-upload" type="file" id="uploadfileedit"></div><div class="uploadedFile mt-1"></div></div></div>
       <div class="row align-items-center my-3"><div class="col-4">Document Type</div><div class="col-1">:</div><div class="col-7">
-
+  
       <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
 
 <input type="checkbox" class="btn-check" id="editsensitive" autocomplete="off">
@@ -118,88 +141,143 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
       </div></div>
     </div>
-    <div class="modal-footer"> 
-      <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-sm btn-theme" id="btnupdate">Update</button> 
+    <div class="modal-footer justify-content-between"> 
+    <div>
+    <button type="button" class="btn btn-sm btn-danger" id="AnABtnDelete" data-bs-toggle="modal" data-bs-target="#AnADeleteModal">Delete</button>
+     </div>
+      <div class="d-flex">
+      <button type="button" class="btn btn-sm btn-secondary mx-1"  id = "btnUpdateClose" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-sm btn-theme mx-1" id="btnupdate">Update</button> </div>
     </div>
   </div>
 </div>
 </div> 
 
-    <div class="border">
-    <h5 class="bg-secondary text-light px-4 py-2">Monthly Announcements</h5>
+<div class="modal fade" id="AnADeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog AnA-delete-warning-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+      </div>
+      <div class="modal-body AnA-delete-warning text-center pt-5"> 
+      <h5 class="modal-title" id="deleteAlterModalLabel">Confirmation</h5>
+      <p class="mb-0">Are you sure want to Delete?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancelAnADelete" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" id="confirmAnADelete" class="btn btn-sm btn-danger">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="border announcement-sec">
+    <h5 class="bg-secondary text-light px-4 py-2" id="headerTitle">Monthly Announcements</h5>
     <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#announcementModal">+ Add Announcements</a></div>
     <div class="announcement-list">  
     <ul class="list-unstyled" id="announcement-one"> 
-    <!--<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="#">FLX Announcements</a></li>-->
+    <!--<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>-->
     </ul> 
     </div>  
     </div>
     </div>
     <!-- next Section-->   
-    <div class="col-6 announcement border p-0">
+    <!--<div class="col-6 announcement border p-0">
     <h5 class="bg-secondary text-light px-4 py-2">Monthly Announcements</h5>
     <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info">+ Add Announcements</a></div>
     <div class="announcement-list">  
     <ul class="list-unstyled"> 
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
     </ul> 
     </div>
-    </div>
+    </div>-->
     <!-- next Section-->
     <!-- next Section-->
-    <div class="col-6 announcement border p-0">
+    <!--<div class="col-6 announcement border p-0">
     <h5 class="bg-secondary text-light px-4 py-2">Monthly Announcements</h5>
     <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info">+ Add Announcements</a></div>
     <div class="announcement-list">  
     <ul class="list-unstyled"> 
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="#">FLX Announcements</a></li>
     </ul> 
     </div>
-    </div>
+    </div>-->
     <!-- next Section-->      
     <!-- next Section-->
-    <div class="col-6 announcement border p-0"> 
+    <!--<div class="col-6 announcement border p-0"> 
     <h5 class="bg-secondary text-light px-4 py-2">Monthly Announcements</h5>
     <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info">+ Add Announcements</a></div>
     <div class="announcement-list">  
     <ul class="list-unstyled">  
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="#">FLX Announcements</a></li>
-    <li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="#">FLX Announcements</a></li>
+    <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="#">FLX Announcements</a></li>
     </ul> 
     </div>
-    </div>  
+    </div>  -->
     <!-- next Section-->
     </div> 
     </div>
-      `;  
+      `;    
+      $("#headerTitle").text(headerTitle)
+      $("#AnABtnDelete").click(()=>{
+        $(".announcement-modal-dialog").hide();
+      });
+      $("#cancelAnADelete").click(()=>{
+        $(".announcement-modal-dialog").show();
+      });
+      $("input[type=radio][name=urlFile]").change(function(e) {
+        urlFile = e.currentTarget.value;
+        console.log(urlFile);
+        if(e.currentTarget.value == "Url"){
+          $("#urlSection").show();
+          $("#fileSection").hide();
+        }else if (e.currentTarget.value == "File"){
+          $("#urlSection").hide();
+          $("#fileSection").show();
+          $("#txturl").val("");
+        }
+            });
+      $("input[type=radio][name=EurlFile]").change(function(e) {
+              updateUrlFile = e.currentTarget.value;
+              console.log(updateUrlFile);
+              if(e.currentTarget.value == "Url"){
+                $("#EurlSection").show();
+                $("#EfileSection").hide();
+              }else if (e.currentTarget.value == "File"){
+                $("#EurlSection").hide();
+                $("#EfileSection").show();
+                $("#editurl").val("");
+              }
+                  });
+
       getFLXAnnouncement();
       $("#btnsubmit").click(async function()
       {
@@ -209,16 +287,44 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
       {
       await updateItems();
       });
-      $(document).on('click','.icon-edit',async function()
+      $(document).on('click','.icon-edit-announce',async function()
       {
-      editdata=$(this).attr("data-id");
-      console.log(editdata);
+          // FileFormFolder
+      editdata=$(this).attr("data-id"); 
+      console.log(editdata); 
       
       $("#edittitle").val(allitems[editdata].Title);
-      $("#attachurl").val(allitems[editdata].Url);
+      $("#editurl").val(allitems[editdata].Url); 
+      // let files = await sp.web.getFolderByServerRelativeUrl(`/sites/FLXCommunity/AnnouncementDocument/`).files.get();
+      // console.log(files);
+      // let SelectedFile = files.filter((fi)=>{})
+      // Maasi
+      // $("#attachurl").val(allitems[editdata].Url);
       //allitems[editdata].SensitiveDocument=true ? ($("#editsensitive").is(':checked')) : ($("#editsensitive").not(':checked')),
       //$("#editsensitive").val(allitems[editdata].SensitiveDocument = true ? ($("#editsensitive").is(':checked')) : ($("#editsensitive").not(':checked'))),
       //$("#editsensitive").attr(':checked');
+      if(allitems[editdata].UrlOrFile == "File"){
+        SelectedFileName = allitems[editdata].Url.split('/').pop();
+        $(".uploadedFile").html("");
+        $(".uploadedFile").html(`<a href="${allitems[editdata].Url}">${SelectedFileName}</a>`);
+      }else{
+        $(".uploadedFile").html("")
+      }
+         
+      if(allitems[editdata].UrlOrFile == "Url"){
+        updateUrlFile = "Url"
+        $("#EurlRadio").prop("checked",true);
+        $("#EurlSection").show();
+        $("#EfileSection").hide();
+      } else{
+        updateUrlFile = "File"
+        $("#EfileRadio").prop("checked",true);
+        $("#EurlSection").hide();
+        $("#EfileSection").show();
+        // $("#editFUploadSec").html(`<input class="form-control-file custom-file-upload" type="file" id="uploadfileedit">`)
+      }
+      console.log(`InList : ${urlFile}`);
+      
       $("#editsensitive").prop( "checked", allitems[editdata].SensitiveDocument);
       $("#editvisible").prop("checked",allitems[editdata].Visible);
       $("#editnewtab").prop("checked",allitems[editdata].Openanewtab);
@@ -227,13 +333,21 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
       
       $("#btnclose").click(function()
       {
-        $("#txttitle").val(""),
-        $("#btnsensitive").val(""),
-        $("#btnvisible").val(""),
-        $("#btnnewtab").val(""), 
-        $("#uploadfile").val(""),
-        $("#txturl").val("")
+        $("#txttitle").val("");
+        $("#btnsensitive").val("");
+        $("#btnvisible").val("");
+        $("#btnnewtab").val("");
+        $("#uploadfile").val("");
+        $("#txturl").val("");
+        
+        let radioReset = document.getElementsByName("urlFile");
+        for(var i=0;i<radioReset.length;i++)
+        radioReset[i]["checked"] = false;
       });
+      $("#btnUpdateClose").click(()=>{
+        $("#uploadfileedit").val("")
+
+      })
       $(document).on("change", "#uploadfile", function () {
         if ($(this)[0].files.length > 0) {
           for (let index = 0; index < $(this)[0].files.length; index++) {
@@ -245,6 +359,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
         }
       });
       $(document).on("change", "#uploadfileedit", function () {
+        
         if ($(this)[0].files.length > 0) {
           for (let index = 0; index < $(this)[0].files.length; index++) {
             const file = $("#uploadfileedit")[0]["files"][index];
@@ -252,11 +367,53 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
           }
           //$(this).val("");
           $(this).parent().find("label").text("Choose File");
+          $(".uploadedFile").html("")
+        }else{
+          $(".uploadedFile").html(`<a href="${allitems[editdata].Url}">${SelectedFileName}</a>`);
         }
       });
+      $("#confirmAnADelete").click(()=>{
+        deleteAnA(allitems[editdata].ID)
+      })
      
   }
-
+  async loadAllLists () :Promise < IPropertyPaneDropdownOption []> 
+  {
+     let  lists :   IPropertyPaneDropdownOption [] =  [];
+      await sp.web.lists.filter('BaseTemplate eq 100').select("Title").get().then((items)=>{
+           for(let i=0;i<items.length;i++)
+           {
+             lists.push({key:items[i].Title,text:items[i].Title});  
+           }
+         })
+         return Promise.resolve (lists);
+  }
+  
+  protected get disableReactivePropertyChanges(): boolean {
+    return true;
+    }
+    protected onPropertyPaneConfigurationStart(): void {
+      // this.listsDropdownDisabled = !this.lists;
+  
+      if (this.lists.length) {
+        return;
+      }
+  
+      this.context.statusRenderer.displayLoadingIndicator(this.domElement, 'lists');
+  
+      this.loadAllLists()
+        .then((listOptions: IPropertyPaneDropdownOption[]): void => {
+          this.lists = listOptions;
+          // this.listsDropdownDisabled = false;
+          this.context.propertyPane.refresh();
+          this.context.statusRenderer.clearLoadingIndicator(this.domElement);
+          this.render();
+        });
+    }
+    protected onAfterPropertyPaneChangesApplied(): void {
+      
+    this.render();
+   }
   protected get dataVersion(): Version {
     return Version.parse('1.0');
   }
@@ -265,18 +422,22 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     return {
       pages: [
         {
-          header: {
-            description: strings.PropertyPaneDescription
-          },
           groups: [
             {
-              groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
+                PropertyPaneTextField('headertitle', {
                   label: strings.DescriptionFieldLabel
                 })
               ]
-            }
+            },
+            {
+            groupFields: [
+              PropertyPaneDropdown('listName', {
+                label: strings.ListNameFieldLabel,
+                options:this.lists
+              })
+            ]
+          }
           ]
         }
       ]
@@ -286,139 +447,153 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
 async function getFLXAnnouncement()
 {
-  await sp.web.lists.getByTitle("FLXAnnouncement").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
+
+
+  if(listname)
   {
-var htmlforannouncement="";
-allitems=item;
-console.log(allitems);
-
-for(var i=0;i<item.length;i++){
-  Filename.push(item[i].Url.split('/').pop());
-  console.log("Filename");
-console.log(Filename);
-
-  if(item[i].SensitiveDocument==true){
-  if(item[i].Openanewtab==true){
-    if (Filename[i].split(".").pop() == "pdf")
+    await sp.web.lists.getByTitle(listname).items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
     {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "ppt")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-excel"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-new"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-
-}
-
-else {
-  if (Filename[i].split(".").pop() == "pdf")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "ppt")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-excel"></span><a href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-new"></span><a href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-}
-}
-
-else{
-  if(item[i].Openanewtab==true){
-    if (Filename[i].split(".").pop() == "pdf")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="${item[i].Url}" target="_blank">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "ppt")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="${item[i].Url}" target="_blank">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="${item[i].Url}" target="_blank">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-excel"></span><a href="${item[i].Url}" target="_blank">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="${item[i].Url}" target="_blank">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-new"></span><a href="${item[i].Url}" target="_blank">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-
-}
-
-else {
-  if (Filename[i].split(".").pop() == "pdf")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-pdf"></span><a href="${item[i].Url}">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "ppt")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-ppt"></span><a href="${item[i].Url}">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-doc"></span><a href="${item[i].Url}">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-excel"></span><a href="${item[i].Url}">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-img"></span><a href="${item[i].Url}">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-    else
-    {
-  htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center"><span class="announce-icon announce-new"></span><a href="${item[i].Url}">${Filename[i]}</a><span class="icon-edit" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></span>`;
-    }
-}
-}
-
-}
-$("#announcement-one").html("");
-$("#announcement-one").html(htmlforannouncement);
-  }).catch((error)=>
-  {
-    console.log(error);
-  });
+  var htmlforannouncement="";
+  allitems=item;
+  console.log(allitems);
+  if(item.length  == 0){
+    
+    $(".announcement-list").html(`<div class="text-center pt-5">No Items Available</div>`)
   }
+  for(var i=0;i<item.length;i++){
+    Filename.push(item[i].Url.split('/').pop());
+    console.log("Filename");
+  console.log(Filename);
+  
+    if(item[i].SensitiveDocument==true){
+    if(item[i].Openanewtab==true){
+      if (Filename[i].split(".").pop() == "pdf")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel col-2"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new col-2"></span><a href="${item[i].Url}" target="_blank" onclick="return confirm('Are you sure?')" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+  
+  }
+  
+  else {
+    if (Filename[i].split(".").pop() == "pdf")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a class="col-8" href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a class="col-8" href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a class="col-8" href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel col-2"></span><a class="col-8" href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a class="col-8" href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new col-2"></span><a class="col-8" href="${item[i].Url}" onclick="return confirm('Are you sure?')">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+  }
+  }
+  
+  else{
+    if(item[i].Openanewtab==true){ 
+      if (Filename[i].split(".").pop() == "pdf")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="${item[i].Url}" target="_blank" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="${item[i].Url}" target="_blank" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="${item[i].Url}" target="_blank" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel col-2"></span><a href="${item[i].Url}" target="_blank" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="${item[i].Url}" target="_blank" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new col-2"></span><a href="${item[i].Url}" target="_blank" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+  
+  }
+  
+  else {
+    if (Filename[i].split(".").pop() == "pdf")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="${item[i].Url}" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="${item[i].Url}" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="${item[i].Url}" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel col-2"></span><a href="${item[i].Url}" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="${item[i].Url}" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new col-2"></span><a href="${item[i].Url}" class="col-8">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+  } 
+  }
+   
+  }
+  $("#announcement-one").html("");
+  $("#announcement-one").html(htmlforannouncement);
+    }).catch((error)=>
+    {
+      console.log(error);
+    });
+  }
+  else{
+    $("#announcement-one").html("");
+  $("#announcement-one").html(`<li class="py-2 px-4 d-flex align-items-center row">No data to display or Please select list name</li>`);
+  }
+  }
+
+  
 
   async function addItems() {
     var requestdata = {}; 
@@ -441,16 +616,19 @@ $("#announcement-one").html(htmlforannouncement);
                   SensitiveDocument: $("#btnsensitive").is(':checked') ? true : false,
                   Visible: $("#btnvisible").is(':checked') ? true : false,
                   Openanewtab: $("#btnnewtab").is(':checked') ? true : false,
+                  UrlOrFile:urlFile
                 };
                 sp.web.lists
-                .getByTitle("FLXAnnouncement")
+                .getByTitle(listname)
                 .items.add(requestdata)
                 .then(function (data) {
                   console.log(data);
                   AlertMessage("Submitted successfully");
                 })
                 .catch(function (error) {
-                  ErrorCallBack(error, "addItems");
+                  // ErrorCallBack(error, "addItems");
+                  console.log(error);
+                  
                 });
               })
           });
@@ -468,21 +646,25 @@ $("#announcement-one").html(htmlforannouncement);
         SensitiveDocument: $("#btnsensitive").is(':checked') ? true : false,
         Visible: $("#btnvisible").is(':checked') ? true : false,
         Openanewtab: $("#btnnewtab").is(':checked') ? true : false,
+        UrlOrFile:urlFile
       };
       sp.web.lists
-      .getByTitle("FLXAnnouncement")
+      .getByTitle(listname)
       .items.add(requestdata)
       .then(function (data) {
         console.log(data);
         AlertMessage("Submitted successfully");
       })
       .catch(function (error) {
-        ErrorCallBack(error, "addItems");
+        // ErrorCallBack(error, "addItems");
+        console.log(error);
+        
       });
     }
   }
 
   async function updateItems() {
+console.log(FileuploadEdit);
 
     var requestdata = {}; 
     var Id=allitems[editdata].ID;
@@ -499,26 +681,56 @@ $("#announcement-one").html(htmlforannouncement);
                   //   "__metadata": { type: "SP.FieldUrlValue" },
                   //   Description: "",
                   //   Url: $("#txturl").val(),
-                
                   // },
                   Url:data.data.ServerRelativeUrl,
                   SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
                   Visible: $("#editvisible").is(':checked') ? true : false,
                   Openanewtab: $("#editnewtab").is(':checked') ? true : false,
+                  UrlOrFile:updateUrlFile
                 };
                 sp.web.lists
-                .getByTitle("FLXAnnouncement")
+                .getByTitle(listname)
                 .items.getById(Id).update(requestdata)
                 .then(function (data) {
                   console.log(data);
-                  AlertMessage("Updated successfully");
+                  AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
                 })
                 .catch(function (error) {
-                  ErrorCallBack(error, "updateItems");
+                  // ErrorCallBack(error, "updateItems");
+                  console.log(error);
+                  
                 });
               })
-          });
-    } 
+          }); 
+    } else if(FileuploadEdit.length == 0 && updateUrlFile == "File" && SelectedFileName != ""){
+      requestdata = {
+        Title: $("#edittitle").val(),
+        // DocumentUrl:{
+        //   "__metadata": { type: "SP.FieldUrlValue" },
+        //   Description: "",
+        //   Url: $("#txturl").val(),
+        // },
+        
+        SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
+        Visible: $("#editvisible").is(':checked') ? true : false,
+        Openanewtab: $("#editnewtab").is(':checked') ? true : false,
+        UrlOrFile:updateUrlFile
+      };
+      sp.web.lists
+      .getByTitle(listname)
+      .items.getById(Id).update(requestdata)
+      .then(function (data) {
+        console.log(data);
+        AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
+      })
+      .catch(function (error) {
+        // ErrorCallBack(error, "updateItems");
+        console.log(error);
+        
+      });
+    }else if(FileuploadEdit.length == 0 && updateUrlFile == "File" && SelectedFileName == ""){
+      $(".uploadedFile").html(`<p class="text-danger">File Cannot be Empty</p>`)
+    }
     else{
       requestdata = {
         Title: $("#edittitle").val(),
@@ -526,42 +738,45 @@ $("#announcement-one").html(htmlforannouncement);
         SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
         Visible: $("#editvisible").is(':checked') ? true : false,
         Openanewtab: $("#editnewtab").is(':checked') ? true : false,
+        UrlOrFile:updateUrlFile
       };
       sp.web.lists
-      .getByTitle("FLXAnnouncement")
+      .getByTitle(listname)
       .items.getById(Id).update(requestdata)
       .then(function (data) {
         console.log(data);
-        AlertMessage("Updated successfully");
+        AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
       })
       .catch(function (error) {
-        ErrorCallBack(error, "updateItems");
-      });
+        // ErrorCallBack(error, "updateItems");
+        console.log(error);
+        
+      }); 
 
     } 
   }
-
-  async function ErrorCallBack(error, methodname) 
-  {
-    try {
-      var errordata = {
-        Error: error.message,
-        MethodName: methodname,
-      };
-      await sp.web.lists
-        .getByTitle("ErrorLog")
-        .items.add(errordata)
-        .then(function (data) 
-        {
-          $('.loader').hide();
-          AlertMessage("Something went wrong.please contact system admin");
-        });
-    } catch (e) {
-      //alert(e.message);
-      $('.loader').hide();
-      Alert("Something went wrong.please contact system admin");
-    }
-  }
+ 
+  // async function ErrorCallBack(error, methodname) 
+  // {
+  //   try {
+  //     var errordata = {
+  //       Error: error.message,
+  //       MethodName: methodname,
+  //     };
+  //     await sp.web.lists
+  //       .getByTitle("ErrorLog")
+  //       .items.add(errordata)
+  //       .then(function (data) 
+  //       {
+  //         $('.loader').hide();
+  //         AlertMessage("Something went wrong.please contact system admin");
+  //       });
+  //   } catch (e) {
+  //     //alert(e.message);
+  //     $('.loader').hide();
+  //     Alert("Something went wrong.please contact system admin");
+  //   }
+  // }
   function AlertMessage(strMewssageEN) {
     alertify
       .alert()
@@ -577,24 +792,9 @@ $("#announcement-one").html(htmlforannouncement);
       })
       
       .show()
-      .setHeader("<em>Confirmation</em> ")
+      .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
       .set("closable", false);
   }
-  
-  function Alert(strMewssageEN) {
-    alertify
-      .alert()
-      .setting({
-        label: "OK",
-        
-        message: strMewssageEN,
-  
-        onok: function () {
-          window.location.href = "#";
-        },
-      })
-      
-      .show()
-      .setHeader("<em>Confirmation</em> ")
-      .set("closable", false);
-  }
+const deleteAnA = (id) =>{
+   sp.web.lists.getByTitle(listname).items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+}

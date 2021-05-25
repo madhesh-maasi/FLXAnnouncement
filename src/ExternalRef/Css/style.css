@@ -22,9 +22,9 @@
   max-width: 100% !important;
 }
 
-.ToolbarButtonTooltip {
+/* .ToolbarButtonTooltip {
   display: none;
-}
+} */
 
 .Canvas {
   margin: 0 !important;
@@ -78,6 +78,7 @@
 }
 .announcement-list {
   max-height: 20rem;
+  min-height: 20rem;
   overflow-y: auto;
   scrollbar-color: #727272 #f5f5f5;
   scrollbar-width: 6px;
@@ -157,17 +158,86 @@ button.btn.btn-theme {
 label.btn.btn-outline-theme {
   padding: 0.375rem 0.75rem !important;
 }
-.cursor{
+.cursor {
   cursor: pointer;
 }
-.icon-edit {
-  width: 20px;
-  height: 20px;
+.icon-edit-announce {
+  padding: 0 !important;
+  margin-left: auto;
+  width: 20px !important;
+  height: 20px !important;
   display: inline-block;
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: 50%;
+  cursor: pointer;
 }
-.icon-edit {
-  background-image: url("../../ExternalRef/images/pencil.png");
+.icon-edit-announce {
+  background-image: url(../../ExternalRef/images/EditPencil.png);
+}
+.AnA-delete-warning-dialog {
+  max-width: 20rem !important;
+}
+.AnA-delete-warning:before {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  content: "";
+  background: url(../images/AlertWarning.png);
+  background-size: cover;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  top: -0.2rem;
+  left: 43%;
+}
+.announcement-sec {
+  width: 26rem;
+}
+.announcement-list ul {
+  overflow-x: hidden;
+}
+#announcement-one a.col-8 {
+  word-break: break-all;
+}
+.ajs-header {
+  padding-top: 5rem !important;
+  text-align: center;
+  padding-bottom: 0 !important;
+}
+.ajs-content {
+  text-align: center;
+}
+.alertfy-success {
+  position: relative;
+}
+.alertfy-success::before {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  content: "";
+  background: url(../images/AlertConfirm.png);
+  background-size: cover;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  top: -90px;
+  left: 42%;
+}
+.alertify .ajs-dialog {
+  max-width: 20rem !important;
+}
+.alertify .ajs-footer .ajs-buttons.ajs-primary {
+  text-align: center !important;
+  margin-bottom: 0.5rem;
+}
+button.ajs-button.ajs-ok {
+  background: #011e41 !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+}
+.ajs-content {
+  padding-top: 6px !important;
+}
+.clsRadioSec label {
+  margin-right: 1rem;
 }

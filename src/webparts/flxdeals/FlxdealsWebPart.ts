@@ -222,10 +222,12 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
       });
     $("#dealsbtnsubmit").click(async function()
     {
+      $(".announcement-modal-dialog").hide();
     await addItems();
     });
     $("#dealsbtnupdate").click(async function()
     {
+      $(".announcement-modal-dialog").hide();
     await updateItems();
     });
     $(document).on('click','.icon-edit-announce',async function()
@@ -389,27 +391,27 @@ async function getFLXDealsAnnouncements()
   else {
     if (Filename[i].split(".").pop() == "pdf")
       {
-        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#sdealsannouncementModalEdit"></div></li>`;
+        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#sdealsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "ppt")
       {
-        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
+        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
       {
-        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
+        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
       {
-        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel col-2"></span><a href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
+        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
       {
-        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
+        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
       }
       else
       {
-        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new col-2"></span><a href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
+        htmlfordealsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivedeals">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#dealsannouncementModalEdit"></div></li>`;
       }
   }
   }

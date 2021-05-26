@@ -165,7 +165,7 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="statusheaderTitle">LinkedIn Status/Website Status/MembershipStatus</h5>
     <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#statusannouncementModal">+ Add Status</a></div>
-    <div id="newsannouncement-list">  
+    <div id="statusannouncement-list">  
     <ul class="list-unstyled" id="statusannouncement-one"> 
     
     </ul> 
@@ -222,10 +222,12 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
       });
     $("#statusbtnsubmit").click(async function()
     {
+      $(".announcement-modal-dialog").hide();
     await addItems();
     });
     $("#statusbtnupdate").click(async function()
     {
+      $(".announcement-modal-dialog").hide();
     await updateItems();
     });
     $(document).on('click','.icon-edit-announce',async function()
@@ -351,7 +353,7 @@ async function getFLXStatusAnnouncements()
   console.log(allitems);
   if(item.length  == 0){
     
-    $("#newsannouncement-list").html(`<div class="text-center pt-5">No Items Available</div>`)
+    $("#statusannouncement-list").html(`<div class="text-center pt-5">No Items Available</div>`)
   }
   for(var i=0;i<item.length;i++){
     Filename.push(item[i].Url.split('/').pop());
@@ -390,27 +392,27 @@ async function getFLXStatusAnnouncements()
   else {
     if (Filename[i].split(".").pop() == "pdf")
       {
-        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "ppt")
       {
-        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
       {
-        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
       {
-        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel col-2"></span><a href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
       {
-        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
       }
       else
       {
-        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new col-2"></span><a href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new col-2"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus">${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
       }
   }
   }

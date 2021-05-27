@@ -133,7 +133,7 @@ button.btn.btn-theme {
   background-color: #011e41 !important;
   padding: 0.24rem 1rem;
   border: none;
-  border-radius: 0.25rem;
+  border-radius: none;
 }
 .option-checkboxes label {
   font-size: 0.8rem;
@@ -141,12 +141,14 @@ button.btn.btn-theme {
 .btn-outline-theme {
   color: #011e41 !important;
   border-color: #011e41 !important;
+  border-radius: 0!important;
 }
 .announcement-modal .btn-check:active + .btn-outline-theme,
 .announcement-modal .btn-check:checked + .btn-outline-theme {
   color: #fff !important;
   background-color: #011e41 !important;
   border-color: #011e41 !important;
+  border-radius: 0!important;
 }
 .modal-header {
   border-bottom: none !important;
@@ -233,7 +235,7 @@ button.ajs-button.ajs-ok {
   background: #011e41 !important;
   color: #fff !important;
   border: 0 !important;
-  border-radius: 4px !important;
+  border-radius: 0px !important;
 }
 .ajs-content {
   padding-top: 6px !important;
@@ -241,3 +243,7 @@ button.ajs-button.ajs-ok {
 .clsRadioSec label {
   margin-right: 1rem;
 }
+/* nishanth changes */
+ .add-announcements a{
+  text-decoration: none;
+}  

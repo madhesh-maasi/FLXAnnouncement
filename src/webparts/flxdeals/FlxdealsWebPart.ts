@@ -57,12 +57,13 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
 
     <div class="modal fade" id="dealsannouncementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
   <div class="modal-dialog announcement-modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content rounded-0">
       <div class="modal-header">
-        <h5 class="modal-title" id="dealsannouncementModalLabel">Add Deals Announcement</h5>
+        <h5 class="modal-title fw-bold w-100 text-center" id="dealsannouncementModalLabel">Add Deals Announcement</h5>
       </div> 
       <div class="modal-body announcement-modal"> 
-        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="dealstxttitle"></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7">
+        <input class="form-control rounded-0" type="text" id="dealstxttitle"></div></div>
         
         
         <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
@@ -75,7 +76,7 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
         </div></div>
 
 
-        <div class="row align-items-center my-3 radioToggle" id="dealsurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="dealstxturl"></div></div>
+        <div class="row align-items-center my-3 radioToggle" id="dealsurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="dealstxturl"></div></div>
         <div class="row align-items-center my-3 radioToggle" id="dealsfileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="dealsuploadfile"></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Document Type</div><div class="col-1">:</div><div class="col-7">
   
@@ -94,8 +95,8 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
         </div></div>
       </div>
       <div class="modal-footer"> 
-        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" id="dealsbtnclose">Close</button>
-        <button type="button" class="btn btn-sm btn-theme" id="dealsbtnsubmit">Submit</button> 
+        <button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal" id="dealsbtnclose">Close</button>
+        <button type="button" class="btn btn-sm btn-theme  rounded-0" id="dealsbtnsubmit">Submit</button> 
       </div>
     </div>
   </div>
@@ -103,13 +104,13 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
 
 <div class="modal fade" id="dealsannouncementModalEdit" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
 <div class="modal-dialog announcement-modal-dialog">
-  <div class="modal-content">
+  <div class="modal-content rounded-0">
     <div class="modal-header">
-      <h5 class="modal-title" id="dealsannouncementModalLabel">Edit Deals Announcement</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <h5 class="modal-title fw-bold w-100 text-center" id="dealsannouncementModalLabel">Edit Deals Announcement</h5>
+     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
     </div>  
     <div class="modal-body announcement-modal"> 
-      <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="dealsedittitle"></div></div>
+      <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="dealsedittitle"></div></div>
       <!--<div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
         <label><input type="radio" class="Eradioc" name="EurlFile" id="dealssEurlRadio" value="Url"> Url </label>
         <label><input type="radio"  class="Eradioc" name="EurlFile" id="dealsEfileRadio" value="File"> File</label>
@@ -134,19 +135,19 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
     </div>
     <div class="modal-footer justify-content-between"> 
     <div>
-    <button type="button" class="btn btn-sm btn-danger" id="dealsAnABtnDelete" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal">Delete</button>
+    <button type="button" class="btn btn-sm btn-danger  rounded-0" id="dealsAnABtnDelete" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal">Delete</button>
      </div>
       <div class="d-flex">
-      <button type="button" class="btn btn-sm btn-secondary mx-1"  id = "dealsbtnUpdateClose" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-sm btn-theme mx-1" id="dealsbtnupdate">Update</button> </div>
+      <button type="button" class="btn btn-sm btn-secondary mx-1  rounded-0"  id = "dealsbtnUpdateClose" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-sm btn-theme mx-1 rounded-0" id="dealsbtnupdate  ">Update</button> </div>
     </div>
-  </div>
+  </div>  
 </div>
 </div> 
 
 <div class="modal fade" id="dealsAnADeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog AnA-delete-warning-dialog">
-    <div class="modal-content">
+  <div class="modal-dialog AnA-delete-warning-dialog rounded-0">
+    <div class="modal-content rounded-0">
       <div class="modal-header">
         
       </div>
@@ -155,8 +156,8 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
       <p class="mb-0">Are you sure want to Delete?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" id="dealscancelAnADelete" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">No</button>
-        <button type="button" id="dealsconfirmAnADelete" class="btn btn-sm btn-danger">Yes</button>
+        <button type="button" id="dealscancelAnADelete" class="btn btn-sm btn-secondary  rounded-0" data-bs-dismiss="modal">No</button>
+        <button type="button" id="dealsconfirmAnADelete" class="btn btn-sm btn-danger  rounded-0">Yes</button>
       </div>
     </div>
   </div>
@@ -164,8 +165,8 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
 
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="dealsheaderTitle">Deals - Curated Solutions for Business Solutions</h5>
-    <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#dealsannouncementModal">+ Add Deals</a></div>
-    <div id="dealsannouncement-list">  
+    <div class="add-announcements px-4 py-1 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#dealsannouncementModal">+ Add Deals</a></div>
+    <div id="dealsannouncement-list" class="announcement-list">  
     <ul class="list-unstyled" id="dealsannouncement-one"> 
     
     </ul> 

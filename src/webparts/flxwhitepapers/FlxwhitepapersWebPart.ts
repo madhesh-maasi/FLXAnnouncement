@@ -56,12 +56,13 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
 
     <div class="modal fade" id="whiteannouncementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
   <div class="modal-dialog announcement-modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content rounded-0">
       <div class="modal-header">
-        <h5 class="modal-title" id="whiteannouncementModalLabel">Add White Papers Announcement</h5>
+        <h5 class="modal-title fw-bold w-100 text-center
+        " id="whiteannouncementModalLabel">Add White Papers Announcement</h5>
       </div> 
       <div class="modal-body announcement-modal"> 
-        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="whitetxttitle"></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="whitetxttitle"></div></div>
         
         
         <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
@@ -74,7 +75,7 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
         </div></div>
 
 
-        <div class="row align-items-center my-3 radioToggle" id="whiteurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="whitetxturl"></div></div>
+        <div class="row align-items-center my-3 radioToggle" id="whiteurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="whitetxturl"></div></div>
         <div class="row align-items-center my-3 radioToggle" id="whitefileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="whiteuploadfile"></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Document Type</div><div class="col-1">:</div><div class="col-7">
   
@@ -91,10 +92,10 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
 </div>
  
         </div></div>
-      </div>
+      </div>  
       <div class="modal-footer"> 
-        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" id="whitebtnclose">Close</button>
-        <button type="button" class="btn btn-sm btn-theme" id="whitebtnsubmit">Submit</button> 
+        <button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal" id="whitebtnclose">Close</button>
+        <button type="button" class="btn btn-sm btn-theme rounded-0" id="whitebtnsubmit">Submit</button> 
       </div>
     </div>
   </div>
@@ -102,13 +103,13 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
 
 <div class="modal fade" id="whiteannouncementModalEdit" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
 <div class="modal-dialog announcement-modal-dialog">
-  <div class="modal-content">
+  <div class="modal-content rounded-0">
     <div class="modal-header">
-      <h5 class="modal-title" id="whiteannouncementModalLabel">Edit White Papers Announcement</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <h5 class="modal-title fw-bold w-100 text-center" id="whiteannouncementModalLabel">Edit White Papers Announcement</h5>
+      <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
     </div>  
     <div class="modal-body announcement-modal"> 
-      <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="whiteedittitle"></div></div>
+      <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="whiteedittitle"></div></div>
       <!--<div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
         <label><input type="radio" class="Eradioc" name="EurlFile" id="whiteEurlRadio" value="Url"> Url </label>
         <label><input type="radio"  class="Eradioc" name="EurlFile" id="whiteEfileRadio" value="File"> File</label>
@@ -133,11 +134,11 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
     </div>
     <div class="modal-footer justify-content-between"> 
     <div>
-    <button type="button" class="btn btn-sm btn-danger" id="whiteAnABtnDelete" data-bs-toggle="modal" data-bs-target="#whiteAnADeleteModal">Delete</button>
+    <button type="button" class="btn btn-sm btn-danger rounded-0" id="whiteAnABtnDelete" data-bs-toggle="modal" data-bs-target="#whiteAnADeleteModal">Delete</button>
      </div>
       <div class="d-flex">
-      <button type="button" class="btn btn-sm btn-secondary mx-1"  id = "whitebtnUpdateClose" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-sm btn-theme mx-1" id="whitebtnupdate">Update</button> </div>
+      <button type="button" class="btn btn-sm btn-secondary mx-1 rounded-0"  id = "whitebtnUpdateClose" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-sm btn-theme mx-1 rounded-0" id="whitebtnupdate">Update</button> </div>
     </div>
   </div>
 </div>
@@ -145,7 +146,7 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
 
 <div class="modal fade" id="whiteAnADeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog AnA-delete-warning-dialog">
-    <div class="modal-content">
+    <div class="modal-content rounded-0">
       <div class="modal-header">
         
       </div>
@@ -154,8 +155,8 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
       <p class="mb-0">Are you sure want to Delete?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" id="whitecancelAnADelete" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">No</button>
-        <button type="button" id="whiteconfirmAnADelete" class="btn btn-sm btn-danger">Yes</button>
+        <button type="button" id="whitecancelAnADelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
+        <button type="button" id="whiteconfirmAnADelete" class="btn btn-sm btn-danger rounded-0">Yes</button>
       </div>
     </div>
   </div>
@@ -163,8 +164,8 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
 
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="whiteheaderTitle">White Papers We Announce</h5>
-    <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#whiteannouncementModal">+ Add White Papers</a></div>
-    <div id="whiteannouncement-list">  
+    <div class="add-announcements px-4 py-1 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#whiteannouncementModal">+ Add White Papers</a></div>
+    <div id="whiteannouncement-list" class="announcement-list">  
     <ul class="list-unstyled" id="whiteannouncement-one"> 
     
     </ul> 

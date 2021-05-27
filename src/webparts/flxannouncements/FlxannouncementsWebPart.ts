@@ -12,7 +12,7 @@ import { SPComponentLoader } from "@microsoft/sp-loader";
 SPComponentLoader.loadScript(
   // "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"
   "https://code.jquery.com/jquery-3.5.1.js"
-);
+);  
 
 import * as $ from "jquery";
 
@@ -64,13 +64,14 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
     <div class="modal fade" id="announcementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
   <div class="modal-dialog announcement-modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content rounded-0 ">
       <div class="modal-header">
-        <h5 class="modal-title" id="announcementModalLabel">Add Announcement</h5>
-        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+        <h5 class="modal-title fw-bold w-100 text-center" id="announcementModalLabel">Add Announcement</h5>
+       
       </div> 
       <div class="modal-body announcement-modal"> 
-        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="txttitle"></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7">
+        <input class="form-control rounded-0" type="text" id="txttitle"></div></div>
         
         
         <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
@@ -83,7 +84,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
         </div></div>
 
 
-        <div class="row align-items-center my-3 radioToggle" id="urlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="txturl"></div></div>
+        <div class="row align-items-center my-3 radioToggle" id="urlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="txturl"></div></div>
         <div class="row align-items-center my-3 radioToggle" id="fileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="uploadfile"></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Document Type</div><div class="col-1">:</div><div class="col-7">
   
@@ -102,22 +103,27 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
         </div></div>
       </div>
       <div class="modal-footer"> 
-        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" id="btnclose">Close</button>
-        <button type="button" class="btn btn-sm btn-theme" id="btnsubmit">Submit</button> 
+        <button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal" id="btnclose">Close</button>
+        <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnsubmit">Submit</button> 
       </div>
     </div>
   </div>
-</div>   
+</div>    
+
+
+                                       <!----edit--->
 
 <div class="modal fade" id="announcementModalEdit" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
 <div class="modal-dialog announcement-modal-dialog">
-  <div class="modal-content">
+  <div class="modal-content rounded-0">
     <div class="modal-header">
-      <h5 class="modal-title" id="announcementModalLabel">Edit Announcement</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <h5 class="modal-title fw-bold w-100 text-center" id="announcementModalLabel">Edit Announcement</h5>
+     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
     </div>  
     <div class="modal-body announcement-modal"> 
-      <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="edittitle"></div></div>
+      <div class="row align-items-center my-3"><div class="col-4">Title</div>
+      <div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="edittitle"></div></div>
+
       <!--<div class="row align-items-center my-3"><div class="col-4">Attachment URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="attachurl"></div></div>
       <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
         <label><input type="radio" class="Eradioc" name="EurlFile" id="EurlRadio" value="Url"> Url </label>
@@ -143,11 +149,11 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     </div>
     <div class="modal-footer justify-content-between"> 
     <div>
-    <button type="button" class="btn btn-sm btn-danger" id="AnABtnDelete" data-bs-toggle="modal" data-bs-target="#AnADeleteModal">Delete</button>
+    <button type="button" class="btn btn-sm btn-danger rounded-0" id="AnABtnDelete" data-bs-toggle="modal" data-bs-target="#AnADeleteModal">Delete</button>
      </div>
       <div class="d-flex">
-      <button type="button" class="btn btn-sm btn-secondary mx-1"  id = "btnUpdateClose" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-sm btn-theme mx-1" id="btnupdate">Update</button> </div>
+      <button type="button" class="btn btn-sm btn-secondary mx-1 rounded-0"  id = "btnUpdateClose" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-sm btn-theme mx-1 rounded-0" id="btnupdate">Update</button> </div>
     </div>
   </div>
 </div>
@@ -155,27 +161,29 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
 <div class="modal fade" id="AnADeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog AnA-delete-warning-dialog">
-    <div class="modal-content">
+    <div class="modal-content rounded-0">
       <div class="modal-header">
         
-        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+        <!-- <button type="button" class="btn-close rounded-0" data-bs-dismiss="modal" aria-label="Close"></button>-->
       </div>
       <div class="modal-body AnA-delete-warning text-center pt-5"> 
       <h5 class="modal-title" id="deleteAlterModalLabel">Confirmation</h5>
       <p class="mb-0">Are you sure want to Delete?</p>
       </div>
-      <div class="modal-footer">
-        <button type="button" id="cancelAnADelete" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">No</button>
-        <button type="button" id="confirmAnADelete" class="btn btn-sm btn-danger">Yes</button>
+      <div class="modal-footer">    
+        <button type="button" id="cancelAnADelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
+        <button type="button" id="confirmAnADelete" class="btn btn-sm btn-danger rounded-0 ">Yes</button>
       </div>
     </div>
   </div>
-</div>
+</div>  
 
-    <div class="border announcement-sec">
+    <div class="border announcement-sec">           
     <h5 class="bg-secondary text-light px-4 py-2" id="headerTitle">Monthly Announcements</h5>
-    <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#announcementModal">+ Add Announcements</a></div>
-    <div id="announcement-list">  
+    <div class="add-announcements px-4 py-1 border-bottom">
+    <a class="text-info cursor " data-bs-toggle="modal" data-bs-target="#announcementModal">+ Add Announcements</a>
+    </div>
+    <div id="announcement-list" class="announcement-list">    
     <ul class="list-unstyled" id="announcement-one"> 
     <!--<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
     <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
@@ -186,13 +194,13 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>
     <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf col-2"></span><a href="#">FLX Announcements</a></li>-->
     </ul> 
-    </div>  
+    </div>     
     </div>
     </div>
-    <!-- next Section-->   
+    <!-- next Section-->       
     <!--<div class="col-6 announcement border p-0">
     <h5 class="bg-secondary text-light px-4 py-2">Monthly Announcements</h5>
-    <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info">+ Add Announcements</a></div>
+    <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info flxAnRemoveUnderline">+ Add Announcements</a></div>
     <div class="announcement-list">  
     <ul class="list-unstyled"> 
     <li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt col-2"></span><a href="#">FLX Announcements</a></li>
@@ -613,7 +621,7 @@ async function getFLXAnnouncements()
               .files.add(filedata.name, filedata, true)
               .then (function(data){
                 console.log(data);
-                requestdata = {
+                requestdata = {  
                   Title: $("#txttitle").val(),
                   // DocumentUrl:{
                   //   "__metadata": { type: "SP.FieldUrlValue" },

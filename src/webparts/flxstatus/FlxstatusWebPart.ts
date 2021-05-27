@@ -57,12 +57,13 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
 
     <div class="modal fade" id="statusannouncementModal" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
   <div class="modal-dialog announcement-modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content rounded-0">
       <div class="modal-header">
-        <h5 class="modal-title" id="statusannouncementModalLabel">Add Status Announcement</h5>
+        <h5 class="modal-title fw-bold w-100 text-center
+        " id="statusannouncementModalLabel">Add Status Announcement</h5>
       </div> 
       <div class="modal-body announcement-modal"> 
-        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="statustxttitle"></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="statustxttitle"></div></div>
         
         
         <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
@@ -75,7 +76,7 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
         </div></div>
 
 
-        <div class="row align-items-center my-3 radioToggle" id="statusurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="statustxturl"></div></div>
+        <div class="row align-items-center my-3 radioToggle" id="statusurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="statustxturl"></div></div>
         <div class="row align-items-center my-3 radioToggle" id="statusfileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="statusuploadfile"></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Document Type</div><div class="col-1">:</div><div class="col-7">
   
@@ -94,8 +95,8 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
         </div></div>
       </div>
       <div class="modal-footer"> 
-        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal" id="statusbtnclose">Close</button>
-        <button type="button" class="btn btn-sm btn-theme" id="statusbtnsubmit">Submit</button> 
+        <button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal" id="statusbtnclose">Close</button>
+        <button type="button" class="btn btn-sm btn-theme rounded-0" id="statusbtnsubmit">Submit</button> 
       </div>
     </div>
   </div>
@@ -103,13 +104,14 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
 
 <div class="modal fade" id="statusannouncementModalEdit" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
 <div class="modal-dialog announcement-modal-dialog">
-  <div class="modal-content">
+  <div class="modal-content rounded-0">
     <div class="modal-header">
-      <h5 class="modal-title" id="statusannouncementModalLabel">Edit Status Announcement</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <h5 class="modal-title fw-bold w-100 text-center" id="statusannouncementModalLabel">Edit Status Announcement</h5>
+     <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
     </div>  
     <div class="modal-body announcement-modal"> 
-      <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="statusedittitle"></div></div>
+      <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7">
+      <input class="form-control rounded-0" type="text" id="statusedittitle"></div></div>
       <!--<div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
         <label><input type="radio" class="Eradioc" name="EurlFile" id="statussEurlRadio" value="Url"> Url </label>
         <label><input type="radio"  class="Eradioc" name="EurlFile" id="statusEfileRadio" value="File"> File</label>
@@ -134,11 +136,11 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
     </div>
     <div class="modal-footer justify-content-between"> 
     <div>
-    <button type="button" class="btn btn-sm btn-danger" id="statusAnABtnDelete" data-bs-toggle="modal" data-bs-target="#statusAnADeleteModal">Delete</button>
+    <button type="button" class="btn btn-sm btn-danger rounded-0" id="statusAnABtnDelete" data-bs-toggle="modal" data-bs-target="#statusAnADeleteModal">Delete</button>
      </div>
       <div class="d-flex">
-      <button type="button" class="btn btn-sm btn-secondary mx-1"  id = "statusbtnUpdateClose" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-sm btn-theme mx-1" id="statusbtnupdate">Update</button> </div>
+      <button type="button" class="btn btn-sm btn-secondary mx-1 rounded-0"  id = "statusbtnUpdateClose" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-sm btn-theme mx-1 rounded-0" id="statusbtnupdate">Update</button> </div>
     </div>
   </div>
 </div>
@@ -146,7 +148,7 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
 
 <div class="modal fade" id="statusAnADeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
   <div class="modal-dialog AnA-delete-warning-dialog">
-    <div class="modal-content">
+    <div class="modal-content rounded-0">
       <div class="modal-header">
         
       </div>
@@ -155,8 +157,8 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
       <p class="mb-0">Are you sure want to Delete?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" id="statuscancelAnADelete" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">No</button>
-        <button type="button" id="statusconfirmAnADelete" class="btn btn-sm btn-danger">Yes</button>
+        <button type="button" id="statuscancelAnADelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
+        <button type="button" id="statusconfirmAnADelete" class="btn btn-sm btn-danger rounded-0">Yes</button>
       </div>
     </div>
   </div>
@@ -164,8 +166,8 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
 
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="statusheaderTitle">LinkedIn Status/Website Status/MembershipStatus</h5>
-    <div class="add-announcements px-4 py-2 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#statusannouncementModal">+ Add Status</a></div>
-    <div id="statusannouncement-list">  
+    <div class="add-announcements px-4 py-1 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#statusannouncementModal">+ Add Status</a></div>
+    <div id="statusannouncement-list" class="announcement-list">  
     <ul class="list-unstyled" id="statusannouncement-one"> 
     
     </ul> 

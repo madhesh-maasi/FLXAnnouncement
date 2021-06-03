@@ -33,7 +33,7 @@ var allitems=[];
 var editdata='';
 var urlFile = "";
 var updateUrlFile = "";
-
+var Sdata="";
 export interface IFlxnewsletterWebPartProps {
   description: string;
 }
@@ -176,6 +176,27 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
    
     </div> 
     </div>
+    <!-- sensitive Modal -->
+           
+                <div class="modal fade" id="SensitiveModalnews" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
+             <div class="modal-dialog sensitive-warning-dialog">
+               <div class="modal-content rounded-0">
+                 <div class="modal-header">
+                    
+                   <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+                 </div>
+                 <div class="modal-body sensitive-warning text-center pt-5"> 
+                 <h5 class="modal-title" id="">Confirmation</h5>
+                 <p class="mb-0">Are you sure want to Proceed?</p>
+                 </div>
+                 <div class="modal-footer">
+                   <button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
+                   <button type="button" id="btnyesnews" class="btn btn-sm btn-danger rounded-0" data-bs-dismiss="modal">Yes</button>
+                 </div>
+               </div>
+             </div>
+           </div> 
+           <!-- sensitive Modal -->
       `;
       //$("#newsheaderTitle").text(headerTitle)
     $("#newsAnABtnDelete").click(()=>{
@@ -212,20 +233,17 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
     getFLXNewsLetterAnnouncements();
     $(document).on('click','.sensitivenews',async function(e)
       {
-        var data=$(this).attr("data-index"); 
-      e.preventDefault();
-      alertify.confirm('Confirm Title','Are you sure want to proceed?',
-  function(){
-    if(allitems[data].Openanewtab==true)
-    window.open(allitems[data].Url, '_blank');
-    else
-    window.location.href = allitems[data].Url;
-    //alertify.success('Ok');
-  },
-  function(){
-    //alertify.error('Cancel');
-  });
+        Sdata=$(this).attr("data-index"); 
+        e.preventDefault();
       });
+      $(document).on('click','#btnyesnews', function(e)
+    {
+    if(allitems[Sdata].Openanewtab==true)
+    window.open(allitems[Sdata].Url, '_blank');
+    else
+    window.location.href = allitems[Sdata].Url;
+    });
+
     $("#newsbtnsubmit").click(async function()
     {
       $(".announcement-modal-dialog").hide();
@@ -371,27 +389,27 @@ async function getFLXNewsLetterAnnouncements()
     if(item[i].Openanewtab==true){
       if (Filename[i].split(".").pop() == "pdf")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "ppt")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
   
   }
@@ -399,27 +417,27 @@ async function getFLXNewsLetterAnnouncements()
   else {
     if (Filename[i].split(".").pop() == "pdf")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "ppt")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
       else
       {
-        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${Filename[i]}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
       }
   }
   }

@@ -253,3 +253,21 @@ button.ajs-button.ajs-ok {
   font-size:1.1rem;
   font-weight: 500;
 }
+.sensitive-warning {
+  position: relative;
+}
+.sensitive-warning:before {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  content: "";
+  background: url(../images/AlertWarning.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  top: -0.2rem;
+  left: 43%;
+}
+.sensitive-warning-dialog {
+  max-width: 20rem !important;
+}

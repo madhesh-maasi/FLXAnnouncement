@@ -105,8 +105,12 @@
 }
 .col-6.announcement {
   width: 40% !important;
-  margin: -1px ​2rem -26px 2rem !important;   
-}
+  margin-top: 7px;
+    margin-bottom: -28px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+} 
+
 .announcement-list li {
   border-bottom: 1px solid #cacaca;
 }

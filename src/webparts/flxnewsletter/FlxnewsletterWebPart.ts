@@ -246,13 +246,47 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
 
     $("#newsbtnsubmit").click(async function()
     {
-      $(".announcement-modal-dialog").hide();
-    await addItems();
+    //   $(".announcement-modal-dialog").hide();
+    // await addItems();
+    if(urlFile == "Url"){
+      if (mandatoryforaddItemsUrl()) {
+        $(".announcement-modal-dialog").hide();
+        await addItems();   
+      } else {
+        console.log("All fileds not filled");
+      }
+    }
+    else{
+      if (mandatoryforaddItems()) {
+        $(".announcement-modal-dialog").hide();
+        await addItems();   
+      } else {
+        console.log("All fileds not filled");
+      }
+    }
+    
     });
     $("#newsbtnupdate").click(async function()
     {
-      $(".announcement-modal-dialog").hide();
-    await updateItems();
+    //   $(".announcement-modal-dialog").hide();
+    // await updateItems();
+    if(updateUrlFile=="Url"){
+      if (mandatoryforupdateItemsUrl()) {
+        $(".announcement-modal-dialog").hide();
+        await updateItems();   
+      } else {
+        console.log("All fileds not filled");
+      }
+    }
+    else{
+      if (mandatoryforupdateItems()) {  
+        $(".announcement-modal-dialog").hide();
+        await updateItems();   
+      } else {
+        console.log("All fileds not filled");
+      }
+    }
+    
     });
     $(document).on('click','.icon-edit-announce',async function()
     {
@@ -295,7 +329,7 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
     {
       $("#newstxttitle").val("");
       $("#newsbtnsensitive").val("");
-      $("#newsbtnvisible").val("");
+      $("#newsbtnvisible").val("");  
       $("#newsbtnnewtab").val("");
       $("#newsuploadfile").val("");
       $("#newstxturl").val("");
@@ -609,7 +643,7 @@ console.log(FileuploadEdit);
                   UrlOrFile:updateUrlFile
                 };
                 sp.web.lists
-                .getByTitle("FLXAnnouncement")
+                .getByTitle("FLXNewsLetterAnnouncements")
                 .items.getById(Id).update(requestdata)
                 .then(function (data) {
                   console.log(data);
@@ -718,3 +752,70 @@ console.log(FileuploadEdit);
 const deleteAnA = (id) =>{
    sp.web.lists.getByTitle("FLXNewsLetterAnnouncements").items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
 }
+function mandatoryforaddItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#newstxttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#newstxturl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#newsuploadfile").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+
+function mandatoryforaddItems() {
+  var isAllvalueFilled = true;
+  if (!$("#newstxttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  // else if (!$("#newstxturl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  else if (!$("#newsuploadfile").val()) {
+    alertify.error("Please upload file");
+    isAllvalueFilled = false;  
+  }   
+  return isAllvalueFilled;
+}
+
+function mandatoryforupdateItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#newsedittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#newsediturl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#newsuploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+function mandatoryforupdateItems() {
+  var isAllvalueFilled = true;
+  if (!$("#newsedittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  }
+  //  else if (!$("#newsediturl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  // else if (!$("#newsuploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+  
+
+

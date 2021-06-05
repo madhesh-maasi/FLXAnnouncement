@@ -105,7 +105,7 @@
 }
 .col-6.announcement {
   width: 40% !important;
-  margin: 3rem 2rem !important;
+  margin: -1px ​2rem -26px 2rem !important;   
 }
 .announcement-list li {
   border-bottom: 1px solid #cacaca;
@@ -125,9 +125,10 @@ button.btn.btn-theme {
   margin: 0 !important;
 }
 .announcement-modal {
-  padding: 1rem 2rem !important;
+  padding: 0rem 2rem !important;
+  margin-top: -6px !important;
 }
-.announcement-modal-dialog {
+.announcement-modal-dialog {   
   max-width: 40rem !important;
 }
 .custom-file-upload::-webkit-file-upload-button {
@@ -259,7 +260,7 @@ button.ajs-button.ajs-ok {
 .sensitive-warning:before {
   position: absolute;
   width: 3rem;
-  height: 3rem;
+  height: 3rem;  
   content: "";
   background: url(../images/AlertWarning.png);
   background-size: cover;
@@ -270,4 +271,4 @@ button.ajs-button.ajs-ok {
 }
 .sensitive-warning-dialog {
   max-width: 20rem !important;
-}
+}         

@@ -324,13 +324,46 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
       $("#btnsubmit").click(async function()
       {
-        $(".announcement-modal-dialog").hide();
-      await addItems();
+        // $(".announcement-modal-dialog").hide();
+        if(urlFile == "Url"){
+          if (mandatoryforaddItemsUrl()) {
+            $(".announcement-modal-dialog").hide();
+            await addItems();   
+          } else {
+            console.log("All fileds not filled");
+          }
+        }
+        else{
+          if (mandatoryforaddItems()) {
+            $(".announcement-modal-dialog").hide();
+            await addItems();   
+          } else {
+            console.log("All fileds not filled");
+          }
+        }
+       
+      // await addItems();
       });
       $("#btnupdate").click(async function()
       {
-        $(".announcement-modal-dialog").hide();
-      await updateItems();
+        if(updateUrlFile=="Url"){
+          if (mandatoryforupdateItemsUrl()) {
+            $(".announcement-modal-dialog").hide();
+            await updateItems();   
+          } else {
+            console.log("All fileds not filled");
+          }
+        }
+        else{
+          if (mandatoryforupdateItems()) {
+            $(".announcement-modal-dialog").hide();
+          await updateItems();   
+        } else {
+          console.log("All fileds not filled");
+        }
+        }
+        
+        // await updateItems();  
       });
       $(document).on('click','.icon-edit-announce',async function()
       {
@@ -733,7 +766,7 @@ console.log(FileuploadEdit);
                   UrlOrFile:updateUrlFile
                 };
                 sp.web.lists
-                .getByTitle("FLXAnnouncement")
+                .getByTitle("FLXAnnouncements") 
                 .items.getById(Id).update(requestdata)
                 .then(function (data) {
                   console.log(data);
@@ -841,4 +874,77 @@ console.log(FileuploadEdit);
   }
 const deleteAnA = (id) =>{
    sp.web.lists.getByTitle("FLXAnnouncements").items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+}
+function mandatoryforaddItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#txttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  else if (!$("#txturl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#uploadfile").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+  
+
+
+
+function mandatoryforaddItems() {
+  var isAllvalueFilled = true;
+  if (!$("#txttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  // else if (!$("#txturl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  else if (!$("#uploadfile").val()) {
+    alertify.error("Please upload file");
+    isAllvalueFilled = false;  
+  }   
+  return isAllvalueFilled;
+}
+
+
+
+function mandatoryforupdateItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#edittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  }
+   else if (!$("#editurl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#uploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+ 
+}
+
+function mandatoryforupdateItems() {
+  var isAllvalueFilled = true;
+  if (!$("#edittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  }
+  //  else if (!$("#editurl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  // else if (!$("#uploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
 }

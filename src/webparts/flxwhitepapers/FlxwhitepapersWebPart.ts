@@ -192,9 +192,9 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
                    <!--<button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>-->
                    <button type="button" id="btnyeswhite" class="btn btn-sm btn-danger rounded-0" data-bs-dismiss="modal">OK</button>
                  </div>
-               </div>
+               </div>        
              </div>
-           </div> 
+           </div>   
            <!-- sensitive Modal -->
     `;
     //$("#whiteheaderTitle").text(headerTitle)
@@ -245,13 +245,47 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
 
     $("#whitebtnsubmit").click(async function()
     {
-      $(".announcement-modal-dialog").hide();
-    await addItems();
+      if(urlFile == "Url"){
+        if (mandatoryforaddItemsUrl()) {
+          $(".announcement-modal-dialog").hide();
+          await addItems();   
+        } else {
+          console.log("All fileds not filled");
+        }
+      }
+      else{
+        if (mandatoryforaddItems()) {
+          $(".announcement-modal-dialog").hide();
+          await addItems();   
+        } else {
+          console.log("All fileds not filled");
+        }
+      }
+     
+     
+    // await addItems();
     });
     $("#whitebtnupdate").click(async function()
     {
-      $(".announcement-modal-dialog").hide();
-    await updateItems();
+      if(updateUrlFile=="Url"){
+        if (mandatoryforupdateItemsUrl()) {
+          $(".announcement-modal-dialog").hide();
+          await updateItems();   
+        } else {
+          console.log("All fileds not filled");
+        }
+      }
+      else{
+        if (mandatoryforupdateItems()) {
+          $(".announcement-modal-dialog").hide();
+          await updateItems();   
+        } else {
+          console.log("All fileds not filled");
+        }
+       
+      }
+      
+    // await updateItems();
     });
     $(document).on('click','.icon-edit-announce',async function()
     {
@@ -607,7 +641,7 @@ console.log(FileuploadEdit);
                   UrlOrFile:updateUrlFile
                 };
                 sp.web.lists
-                .getByTitle("FLXAnnouncement")
+                .getByTitle("FLXWhitePaperAnnouncements")
                 .items.getById(Id).update(requestdata)
                 .then(function (data) {
                   console.log(data);
@@ -716,3 +750,69 @@ console.log(FileuploadEdit);
 const deleteAnA = (id) =>{
    sp.web.lists.getByTitle("FLXWhitePaperAnnouncements").items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
 }
+function mandatoryforaddItems() {
+  var isAllvalueFilled = true;
+  if (!$("#whitetxttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  }
+  //  else if (!$("#whitetxturl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }  
+  else if (!$("#whiteuploadfile").val()) {
+    alertify.error("Please upload file");
+    isAllvalueFilled = false;  
+  }   
+  return isAllvalueFilled;
+}
+function mandatoryforaddItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#whitetxttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#whitetxturl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#whiteuploadfile").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }     
+  return isAllvalueFilled;
+}
+
+function mandatoryforupdateItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#whiteedittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#whiteediturl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#whiteuploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+function mandatoryforupdateItems() {
+  var isAllvalueFilled = true;
+  if (!$("#whiteedittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  // else if (!$("#whiteediturl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  // else if (!$("#whiteuploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+
+
+

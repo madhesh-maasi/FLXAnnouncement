@@ -130,16 +130,16 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
 <input type="checkbox" class="btn-check" id="dealseditnewtab" autocomplete="off">
 <label class="btn btn-outline-theme" for="dealseditnewtab">Open a new tab</label>
 </div>
-
+   
       </div></div>
     </div>
     <div class="modal-footer justify-content-between"> 
     <div>
     <button type="button" class="btn btn-sm btn-danger  rounded-0" id="dealsAnABtnDelete" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal">Delete</button>
      </div>
-      <div class="d-flex">
-      <button type="button" class="btn btn-sm btn-secondary mx-1  rounded-0"  id = "dealsbtnUpdateClose" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-sm btn-theme mx-1 rounded-0" id="dealsbtnupdate  ">Update</button> </div>
+      <div class="d-flex">   
+      <button type="button" class="btn btn-sm btn-secondary mx-1  rounded-0"  id="dealsbtnUpdateClose" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-sm btn-theme mx-1 rounded-0" id="dealsbtnupdate">Update</button> </div>
     </div>
   </div>  
 </div>
@@ -245,14 +245,54 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
     });
 
     $("#dealsbtnsubmit").click(async function()
-    {
-      $(".announcement-modal-dialog").hide();
-    await addItems();
-    });
+    { 
+      if(urlFile == "Url"){
+        if (mandatoryforaddItemsUrl()) {
+          $(".announcement-modal-dialog").hide();
+          await addItems();   
+        } else {
+          console.log("All fileds not filled");
+        }
+      }
+      else{
+        if (mandatoryforaddItems()) {
+          $(".announcement-modal-dialog").hide();
+          await addItems();   
+        } else {
+          console.log("All fileds not filled");
+        }
+
+      }
+      // if (mandatoryforaddItems()) {
+      //   $(".announcement-modal-dialog").hide();
+      //   await addItems();   
+      // } else {
+      //   console.log("All fileds not filled");
+      // }
+      
+    // await addItems();
+    });   
     $("#dealsbtnupdate").click(async function()
     {
-      $(".announcement-modal-dialog").hide();
-    await updateItems();
+      if(updateUrlFile=="Url"){
+        if (mandatoryforupdateItemsUrl()) {
+          $(".announcement-modal-dialog").hide();
+          await updateItems();   
+        } else {
+          console.log("All fileds not filled");
+        }
+      }
+      else{
+        if (mandatoryforupdateItems()) {
+          $(".announcement-modal-dialog").hide();
+          await updateItems();   
+        } else {
+          console.log("All fileds not filled");  
+        }
+      }
+      
+    //   $(".announcement-modal-dialog").hide();
+    // await updateItems();
     });
     $(document).on('click','.icon-edit-announce',async function()
     {
@@ -607,7 +647,7 @@ console.log(FileuploadEdit);
                   UrlOrFile:updateUrlFile
                 };
                 sp.web.lists
-                .getByTitle("FLXAnnouncement")
+                .getByTitle("FLXDealsAnnouncements")
                 .items.getById(Id).update(requestdata)
                 .then(function (data) {
                   console.log(data);
@@ -715,4 +755,67 @@ console.log(FileuploadEdit);
   }
 const deleteAnA = (id) =>{
    sp.web.lists.getByTitle("FLXDealsAnnouncements").items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+}
+function mandatoryforaddItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#dealstxttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#dealstxturl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#dealsuploadfile").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+function mandatoryforaddItems() {
+  var isAllvalueFilled = true;
+  if (!$("#dealstxttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  // else if (!$("#dealstxturl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  else if (!$("#dealsuploadfile").val()) {
+    alertify.error("Please upload file");
+    isAllvalueFilled = false;  
+  }   
+  return isAllvalueFilled;
+}
+
+function mandatoryforupdateItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#dealsedittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$("#dealsediturl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#dealsuploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+function mandatoryforupdateItems() {
+  var isAllvalueFilled = true;
+  if (!$("#dealsedittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  // else if (!$("#dealsediturl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  // else if (!$("#dealsuploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
 }

@@ -276,3 +276,61 @@ button.ajs-button.ajs-ok {
 .sensitive-warning-dialog {
   max-width: 20rem !important;
 }         
+.loader-section {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  z-index: 1000;
+}
+.loader-section {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  z-index: 1000;
+}
+.loader {
+  position: relative;
+  width: 8rem;
+  height: 8rem;
+}
+.loader:before,
+.loader:after {
+  content: "";
+  display: block;
+  position: absolute;
+  background-color: #011e41;
+  left: 50%;
+  right: 0;
+  top: 0;
+  bottom: 50%;
+  box-shadow: -4rem 0 0 #011e41;
+  animation: loader-12 1s linear infinite;
+}
+.loader:after {
+  top: 50%;
+  bottom: 0;
+  animation-delay: 0.25s;
+}
+@keyframes loader-12 {
+  0%,
+  100% {
+    box-shadow: -4rem 0 0 transparent;
+    background-color: #011e41;
+  }
+  50% {
+    box-shadow: -4rem 0 0 #011e41;
+    background-color: transparent;
+  }
+}

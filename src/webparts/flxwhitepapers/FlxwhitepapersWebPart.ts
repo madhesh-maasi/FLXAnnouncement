@@ -49,6 +49,9 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
   public render(): void {
     siteURL = this.context.pageContext.web.absoluteUrl;
     this.domElement.innerHTML = `
+    <div class="loader-section" style="display:none"> 
+    <div class="loader"></div>  
+    </div></div> 
     <div class="cont"> 
      
     <div class="row announcements-section">
@@ -400,7 +403,7 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
 async function getFLXWhitePaperAnnouncements()
 {
 
-
+  $(".loader-section").show();
   // if(FLXWhitePaperAnnouncements)
   // {
     await sp.web.lists.getByTitle("FLXWhitePaperAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
@@ -538,6 +541,7 @@ async function getFLXWhitePaperAnnouncements()
     {
       console.log(error);
     });
+    $(".loader-section").hide();
   }
   // else{
   //   $("#announcement-one").html("");
@@ -548,6 +552,7 @@ async function getFLXWhitePaperAnnouncements()
   
 
   async function addItems() {
+    $(".loader-section").show();
     var requestdata = {}; 
      if (Fileupload.length > 0) {
       await Fileupload.map((filedata) => {
@@ -613,9 +618,11 @@ async function getFLXWhitePaperAnnouncements()
         
       });
     }
+    $(".loader-section").hide();
   }
 
   async function updateItems() {
+    $(".loader-section").show();
 console.log(FileuploadEdit);
 
     var requestdata = {}; 
@@ -706,6 +713,7 @@ console.log(FileuploadEdit);
       }); 
 
     } 
+    $(".loader-section").hide();
   }
  
   // async function ErrorCallBack(error, methodname) 
@@ -739,6 +747,7 @@ console.log(FileuploadEdit);
   
         onok: function () {
           window.location.href = "#";
+          $(".loader-section").hide();
           location.reload();
         },
       })

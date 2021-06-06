@@ -50,6 +50,9 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
   public render(): void {
     siteURL = this.context.pageContext.web.absoluteUrl;
     this.domElement.innerHTML = `
+    <div class="loader-section" style="display:none"> 
+    <div class="loader"></div>  
+    </div></div> 
     <div class="cont"> 
      
     <div class="row announcements-section">
@@ -401,7 +404,7 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
 
 async function getFLXStatusAnnouncements()
 {
-
+  $(".loader-section").show();
 
   // if(FLXStatusAnnouncements)
   // {
@@ -540,6 +543,7 @@ async function getFLXStatusAnnouncements()
     {
       console.log(error);
     });
+    $(".loader-section").hide();
   }
   // else{
   //   $("#announcement-one").html("");
@@ -550,6 +554,7 @@ async function getFLXStatusAnnouncements()
   
 
   async function addItems() {
+    $(".loader-section").show();
     var requestdata = {}; 
      if (Fileupload.length > 0) {
       await Fileupload.map((filedata) => {
@@ -615,9 +620,11 @@ async function getFLXStatusAnnouncements()
         
       });
     }
+    $(".loader-section").hide();
   }
 
   async function updateItems() {
+    $(".loader-section").show();
 console.log(FileuploadEdit);
 
     var requestdata = {}; 
@@ -708,6 +715,7 @@ console.log(FileuploadEdit);
       }); 
 
     } 
+    $(".loader-section").hide();
   }
  
   // async function ErrorCallBack(error, methodname) 
@@ -741,6 +749,7 @@ console.log(FileuploadEdit);
   
         onok: function () {
           window.location.href = "#";
+          $(".loader-section").hide();
           location.reload();
         },
       })

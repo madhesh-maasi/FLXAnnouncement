@@ -50,6 +50,9 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
   public render(): void {
     siteURL = this.context.pageContext.web.absoluteUrl;
     this.domElement.innerHTML = `
+    <div class="loader-section" style="display:none"> 
+    <div class="loader"></div>  
+    </div></div> 
     <div class="cont"> 
      
     <div class="row announcements-section">
@@ -405,6 +408,7 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
 }
 async function getFLXDealsAnnouncements()
 {
+  $(".loader-section").show();
 
 
   // if(FLXDealsAnnouncements)
@@ -544,6 +548,8 @@ async function getFLXDealsAnnouncements()
     {
       console.log(error);
     });
+    $(".loader-section").hide();
+
   }
   // else{
   //   $("#announcement-one").html("");
@@ -553,7 +559,9 @@ async function getFLXDealsAnnouncements()
 
   
 
-  async function addItems() {
+  async function addItems() { 
+    $(".loader-section").show();
+
     var requestdata = {}; 
      if (Fileupload.length > 0) {
       await Fileupload.map((filedata) => {
@@ -619,9 +627,13 @@ async function getFLXDealsAnnouncements()
         
       });
     }
+    $(".loader-section").hide();
+
   }
 
   async function updateItems() {
+    $(".loader-section").show();
+
 console.log(FileuploadEdit);
 
     var requestdata = {}; 
@@ -712,6 +724,8 @@ console.log(FileuploadEdit);
       }); 
 
     } 
+    $(".loader-section").hide();
+
   }
  
   // async function ErrorCallBack(error, methodname) 
@@ -745,6 +759,7 @@ console.log(FileuploadEdit);
   
         onok: function () {
           window.location.href = "#";
+          $(".loader-section").hide();
           location.reload();
         },
       })

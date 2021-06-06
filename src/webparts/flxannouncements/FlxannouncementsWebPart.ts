@@ -58,6 +58,9 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     //listname = this.properties.listName;
     //headerTitle=this.properties.headertitle
     this.domElement.innerHTML = `  
+    <div class="loader-section" style="display:none"> 
+    <div class="loader"></div>  
+    </div></div> 
     <div class="cont"> 
      
     <div class="row announcements-section">
@@ -176,7 +179,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
         <button type="button" id="confirmAnADelete" class="btn btn-sm btn-danger rounded-0 ">Yes</button>
       </div>
     </div>
-  </div>
+  </div> 
 </div>  
 
     <div class="border announcement-sec">           
@@ -519,6 +522,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
 async function getFLXAnnouncements()
 {
+  $(".loader-section").show();
 
 
   // if(FLXAnnouncement)
@@ -661,6 +665,8 @@ async function getFLXAnnouncements()
     {
       console.log(error);
     });
+    $(".loader-section").hide();
+
   }
 
   
@@ -673,6 +679,8 @@ async function getFLXAnnouncements()
   
 
   async function addItems() {
+    $(".loader-section").show();
+
     var requestdata = {}; 
      if (Fileupload.length > 0) {
       await Fileupload.map((filedata) => {
@@ -738,9 +746,13 @@ async function getFLXAnnouncements()
         
       });
     }
+    $(".loader-section").hide();
+
   }
 
   async function updateItems() {
+    $(".loader-section").show();
+
 console.log(FileuploadEdit);
 
     var requestdata = {}; 
@@ -831,6 +843,8 @@ console.log(FileuploadEdit);
       }); 
 
     } 
+    $(".loader-section").hide();
+
   }
  
   // async function ErrorCallBack(error, methodname) 
@@ -864,6 +878,8 @@ console.log(FileuploadEdit);
   
         onok: function () {
           window.location.href = "#";
+          $(".loader-section").hide();
+
           location.reload();
         },
       })

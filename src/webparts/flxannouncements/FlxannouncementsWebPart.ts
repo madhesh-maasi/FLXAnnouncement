@@ -35,6 +35,8 @@ var editdata='';
 var urlFile = "";
 var updateUrlFile = "";
 var Sdata="";
+var FilteredAdmin =[];
+var currentuser = "";
 export interface IFlxannouncementsWebPartProps { 
   description: string;
   //listName:string;
@@ -55,6 +57,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 
   public render(): void {   
     siteURL = this.context.pageContext.web.absoluteUrl;
+    currentuser = this.context.pageContext.user.email;
     //listname = this.properties.listName;
     //headerTitle=this.properties.headertitle
     this.domElement.innerHTML = `  
@@ -183,7 +186,8 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
   </div> 
 </div>     
 <div class="viewallannounce d-flex justify-content-end">
-    <a href="#" class="info"  class="color-info" data-bs-toggle="modal" data-bs-target="#exampleModalscrollone" >View All</a>
+    <a href="#" class="info"  class="color-info"  id="ViewAll">View All</a>
+    <a href="#" class="info"  class="color-info"  id="ShowVisible">Show Visible</a>
     </div>
     <div class="border announcement-sec">           
     <h5 class="bg-secondary text-light px-4 py-2" id="headerTitle">Monthly Announcements</h5>
@@ -366,7 +370,16 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
   </div>
 </div>
                
-      `;    
+      `;  
+      getadminfromsite();
+      $("#ShowVisible").hide();
+      $("#ViewAll").show();
+      $("#ViewAll").click(()=>{
+        getFLXAnnouncementsAll();
+      });
+      $("#ShowVisible").click(()=>{
+        getFLXAnnouncements();
+      });
       //$("#headerTitle").text(headerTitle)
       $("#AnABtnDelete").click(()=>{
         $(".announcement-modal-dialog").hide();
@@ -399,7 +412,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
               }
                   });
 
-      getFLXAnnouncements();
+      
       $(document).on('click','.sensitive', function(e)
       {
         Sdata=$(this).attr("data-index"); 
@@ -607,15 +620,501 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     };
   }
 }
-
+async function getadminfromsite() {
+  $(".loader-section").show();
+  var AdminInfo = [];
+  await sp.web.siteGroups
+    .getByName("FLX Admins")
+    .users.get()
+    .then(function (result) {
+      for (var i = 0; i < result.length; i++) {
+        AdminInfo.push({
+          Title: result[i].Title,
+          ID: result[i].Id,
+          Email: result[i].Email,
+        });
+      }
+      FilteredAdmin = AdminInfo.filter((admin)=>{return (admin.Email == currentuser)});
+      console.log(FilteredAdmin);
+      getFLXAnnouncements();
+    })
+    .catch(function (err) {
+      alert("Group not found: " + err);
+      $(".loader-section").hide();
+    });
+    $(".loader-section").hide();
+}
 async function getFLXAnnouncements()
 {
   $(".loader-section").show();
-
+  $("#ShowVisible").hide();
+  $("#ViewAll").show();
+  allitems=[];
+  Filename=[];
 
   // if(FLXAnnouncement)
   // {
     await sp.web.lists.getByTitle("FLXAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
+    {
+  var htmlforannouncement="";
+  allitems=item;
+  console.log(allitems);
+  if(item.length  == 0){
+    
+    $("#announcement-list").html(`<div class="text-center pt-5">No Items Available</div>`)
+  }
+  for(var i=0;i<item.length;i++){
+    Filename.push(item[i].Url.split('/').pop());
+    console.log("Filename");
+  console.log(Filename);
+  
+    if(item[i].SensitiveDocument==true){
+    if(item[i].Openanewtab==true){
+      if (Filename[i].split(".").pop() == "pdf")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row">
+    <span class="announce-icon announce-pdf mx-1 col-1"></span>
+    <a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a>
+    <div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+  
+  }
+       
+  else {
+    if (Filename[i].split(".").pop() == "pdf")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off"  href="${item[i].Url}" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off"  href="${item[i].Url}" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitive" data-bs-toggle="modal" data-bs-target="#SensitiveModal" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+  }
+  }
+  
+  else{
+    if(item[i].Openanewtab==true){ 
+      if (Filename[i].split(".").pop() == "pdf")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+  
+  }
+  
+  else {
+    if (Filename[i].split(".").pop() == "pdf")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+      else
+      {
+    htmlforannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#announcementModalEdit"></div></li>`;
+      }
+  } 
+  }
+   
+  }
+  
+  if (FilteredAdmin.length>0) 
+        {
+         $("#announcement-one").html("");
+         $("#announcement-one").html(htmlforannouncement);
+        }
+        else{
+          $("#announcement-one").html("");
+          $("#announcement-one").html(htmlforannouncement);
+          $("#ViewAll").hide();
+          $("#ShowVisible").hide();
+          $("#AnABtnDelete").hide();
+          $("#btnupdate").hide();
+        }
+    }).catch((error)=>
+    {
+      console.log(error);
+      $(".loader-section").hide();
+    });
+  $(".loader-section").hide();
+
+  }
+
+  
+  // else{
+  //   $("#announcement-one").html("");
+  // $("#announcement-one").html(`<li class="py-2 px-4 d-flex align-items-center row">No data to display or Please select list name</li>`);
+  // }
+  // }
+
+  
+
+  async function addItems() {
+    $(".loader-section").show();
+
+    var requestdata = {}; 
+     if (Fileupload.length > 0) {
+      await Fileupload.map((filedata) => {
+            sp.web
+              .getFolderByServerRelativeUrl("/sites/FLXCommunity/AnnouncementDocument/FLXAnnouncements")
+              .files.add(filedata.name, filedata, true)
+              .then (function(data){
+                console.log(data);
+                requestdata = {  
+                  Title: $("#txttitle").val(),
+                  // DocumentUrl:{
+                  //   "__metadata": { type: "SP.FieldUrlValue" },
+                  //   Description: "",
+                  //   Url: $("#txturl").val(),
+                
+                  // },
+                  Url:data.data.ServerRelativeUrl,
+                  SensitiveDocument: $("#btnsensitive").is(':checked') ? true : false,
+                  Visible: $("#btnvisible").is(':checked') ? true : false,
+                  Openanewtab: $("#btnnewtab").is(':checked') ? true : false,
+                  UrlOrFile:urlFile
+                };
+                sp.web.lists
+                .getByTitle("FLXAnnouncements")
+                .items.add(requestdata)
+                .then(function (data) {
+                  console.log(data);
+                  AlertMessage("<div class='alertfy-success'>Submitted successfully</div>");
+                })
+                .catch(function (error) {
+                  // ErrorCallBack(error, "addItems");
+                  console.log(error);
+                  $(".loader-section").hide();
+                });
+              })
+          });
+    }  
+    else{
+      requestdata = {
+        Title: $("#txttitle").val(),
+        // DocumentUrl:{
+        //   "__metadata": { type: "SP.FieldUrlValue" },
+        //   Description: "",
+        //   Url: $("#txturl").val(),
+      
+        // },
+        Url:$("#txturl").val(),
+        SensitiveDocument: $("#btnsensitive").is(':checked') ? true : false,
+        Visible: $("#btnvisible").is(':checked') ? true : false,
+        Openanewtab: $("#btnnewtab").is(':checked') ? true : false,
+        UrlOrFile:urlFile
+      };
+      sp.web.lists
+      .getByTitle("FLXAnnouncements")
+      .items.add(requestdata)
+      .then(function (data) {
+        console.log(data);
+        AlertMessage("<div class='alertfy-success'>Submitted successfully</div>");
+      })
+      .catch(function (error) {
+        // ErrorCallBack(error, "addItems");
+        console.log(error);
+        $(".loader-section").hide();
+      });
+    }
+    $(".loader-section").hide();
+
+  }
+
+  async function updateItems() {
+    $(".loader-section").show();
+
+console.log(FileuploadEdit);
+
+    var requestdata = {}; 
+    var Id=allitems[editdata].ID;
+     if (FileuploadEdit.length > 0) {
+      await FileuploadEdit.map((filedata) => {
+            sp.web
+              .getFolderByServerRelativeUrl("/sites/FLXCommunity/AnnouncementDocument/FLXAnnouncements")
+              .files.add(filedata.name, filedata, true)
+              .then (function(data){
+                console.log(data);
+                requestdata = {
+                  Title: $("#edittitle").val(),
+                  // DocumentUrl:{
+                  //   "__metadata": { type: "SP.FieldUrlValue" },
+                  //   Description: "",
+                  //   Url: $("#txturl").val(),
+                  // },
+                  Url:data.data.ServerRelativeUrl,
+                  SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
+                  Visible: $("#editvisible").is(':checked') ? true : false,
+                  Openanewtab: $("#editnewtab").is(':checked') ? true : false,
+                  UrlOrFile:updateUrlFile
+                };
+                sp.web.lists
+                .getByTitle("FLXAnnouncements") 
+                .items.getById(Id).update(requestdata)
+                .then(function (data) {
+                  console.log(data);
+                  AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
+                })
+                .catch(function (error) {
+                  // ErrorCallBack(error, "updateItems");
+                  console.log(error);
+                  $(".loader-section").hide();
+                });
+              })
+          }); 
+    } else if(FileuploadEdit.length == 0 && updateUrlFile == "File" && SelectedFileName != ""){
+      requestdata = {
+        Title: $("#edittitle").val(),
+        // DocumentUrl:{
+        //   "__metadata": { type: "SP.FieldUrlValue" },
+        //   Description: "",
+        //   Url: $("#txturl").val(),
+        // },
+        
+        SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
+        Visible: $("#editvisible").is(':checked') ? true : false,
+        Openanewtab: $("#editnewtab").is(':checked') ? true : false,
+        UrlOrFile:updateUrlFile
+      };
+      sp.web.lists
+      .getByTitle("FLXAnnouncements")
+      .items.getById(Id).update(requestdata)
+      .then(function (data) {
+        console.log(data);
+        AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
+      })
+      .catch(function (error) {
+        // ErrorCallBack(error, "updateItems");
+        console.log(error);
+        $(".loader-section").hide();
+      });
+    }else if(FileuploadEdit.length == 0 && updateUrlFile == "File" && SelectedFileName == ""){
+      $(".uploadedFile").html(`<p class="text-danger">File Cannot be Empty</p>`)
+    }
+    else{
+      requestdata = {
+        Title: $("#edittitle").val(),
+        Url:$("#editurl").val(),
+        SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
+        Visible: $("#editvisible").is(':checked') ? true : false,
+        Openanewtab: $("#editnewtab").is(':checked') ? true : false,
+        UrlOrFile:updateUrlFile
+      };
+      sp.web.lists
+      .getByTitle("FLXAnnouncements")
+      .items.getById(Id).update(requestdata)
+      .then(function (data) {
+        console.log(data);
+        AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
+      })
+      .catch(function (error) {
+        // ErrorCallBack(error, "updateItems");
+        console.log(error);
+        $(".loader-section").hide();
+      }); 
+
+    } 
+    $(".loader-section").hide();
+
+  }
+ 
+  // async function ErrorCallBack(error, methodname) 
+  // {
+  //   try {
+  //     var errordata = {
+  //       Error: error.message,
+  //       MethodName: methodname,
+  //     };
+  //     await sp.web.lists
+  //       .getByTitle("ErrorLog")
+  //       .items.add(errordata)
+  //       .then(function (data) 
+  //       {
+  //         $('.loader').hide();
+  //         AlertMessage("Something went wrong.please contact system admin");
+  //       });
+  //   } catch (e) {
+  //     //alert(e.message);
+  //     $('.loader').hide();
+  //     Alert("Something went wrong.please contact system admin");
+  //   }
+  // }
+  function AlertMessage(strMewssageEN) {
+    alertify
+      .alert()
+      .setting({
+        label: "OK",
+        
+        message: strMewssageEN,
+  
+        onok: function () {
+          window.location.href = "#";
+          $(".loader-section").hide();
+
+          location.reload();
+        },
+      })
+      
+      .show()
+      .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
+      .set("closable", false);
+  }
+const deleteAnA = (id) =>{
+   sp.web.lists.getByTitle("FLXAnnouncements").items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+}
+function mandatoryforaddItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#txttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  else if (!$("#txturl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#uploadfile").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+  
+
+
+
+function mandatoryforaddItems() {
+  var isAllvalueFilled = true;
+  if (!$("#txttitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  // else if (!$("#txturl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  else if (!$("#uploadfile").val()) {
+    alertify.error("Please upload file");
+    isAllvalueFilled = false;  
+  }   
+  return isAllvalueFilled;
+}
+
+
+
+function mandatoryforupdateItemsUrl() {
+  var isAllvalueFilled = true;
+  if (!$("#edittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  }
+   else if (!$("#editurl").val()) {
+    alertify.error("Please Enter the url ");
+    isAllvalueFilled = false;
+  }
+  // else if (!$("#uploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+ 
+}
+
+function mandatoryforupdateItems() {
+  var isAllvalueFilled = true;
+  if (!$("#edittitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  }
+  //  else if (!$("#editurl").val()) {
+  //   alertify.error("Please Enter the url ");
+  //   isAllvalueFilled = false;
+  // }
+  // else if (!$("#uploadfileedit").val()) {
+  //   alertify.error("Please upload file");
+  //   isAllvalueFilled = false;  
+  // }   
+  return isAllvalueFilled;
+}
+
+async function getFLXAnnouncementsAll()
+{
+  $(".loader-section").show();
+  $("#ShowVisible").show();
+  $("#ViewAll").hide();
+  allitems=[];
+  Filename=[];
+  // if(FLXAnnouncement)
+  // {
+    await sp.web.lists.getByTitle("FLXAnnouncements").items.select("*").get().then(async (item)=>
     {
   var htmlforannouncement="";
   allitems=item;
@@ -752,303 +1251,8 @@ async function getFLXAnnouncements()
     }).catch((error)=>
     {
       console.log(error);
+      $(".loader-section").hide();
     });
     $(".loader-section").hide();
 
   }
-
-  
-  // else{
-  //   $("#announcement-one").html("");
-  // $("#announcement-one").html(`<li class="py-2 px-4 d-flex align-items-center row">No data to display or Please select list name</li>`);
-  // }
-  // }
-
-  
-
-  async function addItems() {
-    $(".loader-section").show();
-
-    var requestdata = {}; 
-     if (Fileupload.length > 0) {
-      await Fileupload.map((filedata) => {
-            sp.web
-              .getFolderByServerRelativeUrl("/sites/FLXCommunity/AnnouncementDocument/FLXAnnouncements")
-              .files.add(filedata.name, filedata, true)
-              .then (function(data){
-                console.log(data);
-                requestdata = {  
-                  Title: $("#txttitle").val(),
-                  // DocumentUrl:{
-                  //   "__metadata": { type: "SP.FieldUrlValue" },
-                  //   Description: "",
-                  //   Url: $("#txturl").val(),
-                
-                  // },
-                  Url:data.data.ServerRelativeUrl,
-                  SensitiveDocument: $("#btnsensitive").is(':checked') ? true : false,
-                  Visible: $("#btnvisible").is(':checked') ? true : false,
-                  Openanewtab: $("#btnnewtab").is(':checked') ? true : false,
-                  UrlOrFile:urlFile
-                };
-                sp.web.lists
-                .getByTitle("FLXAnnouncements")
-                .items.add(requestdata)
-                .then(function (data) {
-                  console.log(data);
-                  AlertMessage("<div class='alertfy-success'>Submitted successfully</div>");
-                })
-                .catch(function (error) {
-                  // ErrorCallBack(error, "addItems");
-                  console.log(error);
-                  
-                });
-              })
-          });
-    }  
-    else{
-      requestdata = {
-        Title: $("#txttitle").val(),
-        // DocumentUrl:{
-        //   "__metadata": { type: "SP.FieldUrlValue" },
-        //   Description: "",
-        //   Url: $("#txturl").val(),
-      
-        // },
-        Url:$("#txturl").val(),
-        SensitiveDocument: $("#btnsensitive").is(':checked') ? true : false,
-        Visible: $("#btnvisible").is(':checked') ? true : false,
-        Openanewtab: $("#btnnewtab").is(':checked') ? true : false,
-        UrlOrFile:urlFile
-      };
-      sp.web.lists
-      .getByTitle("FLXAnnouncements")
-      .items.add(requestdata)
-      .then(function (data) {
-        console.log(data);
-        AlertMessage("<div class='alertfy-success'>Submitted successfully</div>");
-      })
-      .catch(function (error) {
-        // ErrorCallBack(error, "addItems");
-        console.log(error);
-        
-      });
-    }
-    $(".loader-section").hide();
-
-  }
-
-  async function updateItems() {
-    $(".loader-section").show();
-
-console.log(FileuploadEdit);
-
-    var requestdata = {}; 
-    var Id=allitems[editdata].ID;
-     if (FileuploadEdit.length > 0) {
-      await FileuploadEdit.map((filedata) => {
-            sp.web
-              .getFolderByServerRelativeUrl("/sites/FLXCommunity/AnnouncementDocument/FLXAnnouncements")
-              .files.add(filedata.name, filedata, true)
-              .then (function(data){
-                console.log(data);
-                requestdata = {
-                  Title: $("#edittitle").val(),
-                  // DocumentUrl:{
-                  //   "__metadata": { type: "SP.FieldUrlValue" },
-                  //   Description: "",
-                  //   Url: $("#txturl").val(),
-                  // },
-                  Url:data.data.ServerRelativeUrl,
-                  SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
-                  Visible: $("#editvisible").is(':checked') ? true : false,
-                  Openanewtab: $("#editnewtab").is(':checked') ? true : false,
-                  UrlOrFile:updateUrlFile
-                };
-                sp.web.lists
-                .getByTitle("FLXAnnouncements") 
-                .items.getById(Id).update(requestdata)
-                .then(function (data) {
-                  console.log(data);
-                  AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
-                })
-                .catch(function (error) {
-                  // ErrorCallBack(error, "updateItems");
-                  console.log(error);
-                  
-                });
-              })
-          }); 
-    } else if(FileuploadEdit.length == 0 && updateUrlFile == "File" && SelectedFileName != ""){
-      requestdata = {
-        Title: $("#edittitle").val(),
-        // DocumentUrl:{
-        //   "__metadata": { type: "SP.FieldUrlValue" },
-        //   Description: "",
-        //   Url: $("#txturl").val(),
-        // },
-        
-        SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
-        Visible: $("#editvisible").is(':checked') ? true : false,
-        Openanewtab: $("#editnewtab").is(':checked') ? true : false,
-        UrlOrFile:updateUrlFile
-      };
-      sp.web.lists
-      .getByTitle("FLXAnnouncements")
-      .items.getById(Id).update(requestdata)
-      .then(function (data) {
-        console.log(data);
-        AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
-      })
-      .catch(function (error) {
-        // ErrorCallBack(error, "updateItems");
-        console.log(error);
-        
-      });
-    }else if(FileuploadEdit.length == 0 && updateUrlFile == "File" && SelectedFileName == ""){
-      $(".uploadedFile").html(`<p class="text-danger">File Cannot be Empty</p>`)
-    }
-    else{
-      requestdata = {
-        Title: $("#edittitle").val(),
-        Url:$("#editurl").val(),
-        SensitiveDocument: $("#editsensitive").is(':checked') ? true : false,
-        Visible: $("#editvisible").is(':checked') ? true : false,
-        Openanewtab: $("#editnewtab").is(':checked') ? true : false,
-        UrlOrFile:updateUrlFile
-      };
-      sp.web.lists
-      .getByTitle("FLXAnnouncements")
-      .items.getById(Id).update(requestdata)
-      .then(function (data) {
-        console.log(data);
-        AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
-      })
-      .catch(function (error) {
-        // ErrorCallBack(error, "updateItems");
-        console.log(error);
-        
-      }); 
-
-    } 
-    $(".loader-section").hide();
-
-  }
- 
-  // async function ErrorCallBack(error, methodname) 
-  // {
-  //   try {
-  //     var errordata = {
-  //       Error: error.message,
-  //       MethodName: methodname,
-  //     };
-  //     await sp.web.lists
-  //       .getByTitle("ErrorLog")
-  //       .items.add(errordata)
-  //       .then(function (data) 
-  //       {
-  //         $('.loader').hide();
-  //         AlertMessage("Something went wrong.please contact system admin");
-  //       });
-  //   } catch (e) {
-  //     //alert(e.message);
-  //     $('.loader').hide();
-  //     Alert("Something went wrong.please contact system admin");
-  //   }
-  // }
-  function AlertMessage(strMewssageEN) {
-    alertify
-      .alert()
-      .setting({
-        label: "OK",
-        
-        message: strMewssageEN,
-  
-        onok: function () {
-          window.location.href = "#";
-          $(".loader-section").hide();
-
-          location.reload();
-        },
-      })
-      
-      .show()
-      .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
-      .set("closable", false);
-  }
-const deleteAnA = (id) =>{
-   sp.web.lists.getByTitle("FLXAnnouncements").items.getById(id).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
-}
-function mandatoryforaddItemsUrl() {
-  var isAllvalueFilled = true;
-  if (!$("#txttitle").val()) {
-    alertify.error("Please Enter the Title");
-    isAllvalueFilled = false;
-  } 
-  else if (!$("#txturl").val()) {
-    alertify.error("Please Enter the url ");
-    isAllvalueFilled = false;
-  }
-  // else if (!$("#uploadfile").val()) {
-  //   alertify.error("Please upload file");
-  //   isAllvalueFilled = false;  
-  // }   
-  return isAllvalueFilled;
-}
-  
-
-
-
-function mandatoryforaddItems() {
-  var isAllvalueFilled = true;
-  if (!$("#txttitle").val()) {
-    alertify.error("Please Enter the Title");
-    isAllvalueFilled = false;
-  } 
-  // else if (!$("#txturl").val()) {
-  //   alertify.error("Please Enter the url ");
-  //   isAllvalueFilled = false;
-  // }
-  else if (!$("#uploadfile").val()) {
-    alertify.error("Please upload file");
-    isAllvalueFilled = false;  
-  }   
-  return isAllvalueFilled;
-}
-
-
-
-function mandatoryforupdateItemsUrl() {
-  var isAllvalueFilled = true;
-  if (!$("#edittitle").val()) {
-    alertify.error("Please Enter the Title");
-    isAllvalueFilled = false;
-  }
-   else if (!$("#editurl").val()) {
-    alertify.error("Please Enter the url ");
-    isAllvalueFilled = false;
-  }
-  // else if (!$("#uploadfileedit").val()) {
-  //   alertify.error("Please upload file");
-  //   isAllvalueFilled = false;  
-  // }   
-  return isAllvalueFilled;
- 
-}
-
-function mandatoryforupdateItems() {
-  var isAllvalueFilled = true;
-  if (!$("#edittitle").val()) {
-    alertify.error("Please Enter the Title");
-    isAllvalueFilled = false;
-  }
-  //  else if (!$("#editurl").val()) {
-  //   alertify.error("Please Enter the url ");
-  //   isAllvalueFilled = false;
-  // }
-  // else if (!$("#uploadfileedit").val()) {
-  //   alertify.error("Please upload file");
-  //   isAllvalueFilled = false;  
-  // }   
-  return isAllvalueFilled;
-}

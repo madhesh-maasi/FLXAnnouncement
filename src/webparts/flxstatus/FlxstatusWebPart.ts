@@ -34,6 +34,8 @@ var editdata='';
 var urlFile = "";
 var updateUrlFile = "";
 var Sdata="";
+var FilteredAdmin =[];
+var currentuser = "";
 export interface IFlxstatusWebPartProps {
   description: string;
 }
@@ -49,6 +51,7 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
 
   public render(): void {
     siteURL = this.context.pageContext.web.absoluteUrl;
+    currentuser = this.context.pageContext.user.email;
     this.domElement.innerHTML = `
     <div class="loader-section" style="display:none"> 
     <div class="loader"></div>  
@@ -167,7 +170,8 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
   </div>
 </div>
 <div class="viewallannounce d-flex justify-content-end">
-    <a href="#" class="info"  class="color-info" data-bs-toggle="modal" data-bs-target="#exampleModalscroll3one" >View All</a>
+<a href="#" class="info"  class="color-info"  id="ViewAllstatus">View All</a>
+<a href="#" class="info"  class="color-info"  id="ShowVisiblestatus">Show Visible</a>
     </div>  
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="statusheaderTitle">LinkedIn Status/Website Status/MembershipStatus</h5>
@@ -289,7 +293,15 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
              </div>
            </div>
     `;
-    //$("#statusheaderTitle").text(headerTitle)
+    getadminfromsite();
+    $("#ShowVisiblestatus").hide();
+      $("#ViewAllstatus").show();
+      $("#ViewAllstatus").click(()=>{
+        getFLXStatusAnnouncementsAll();
+      });
+      $("#ShowVisiblestatus").click(()=>{
+        getFLXStatusAnnouncements();
+      });
     $("#statusAnABtnDelete").click(()=>{
       $(".announcement-modal-dialog").hide();
     });
@@ -320,8 +332,6 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
               $("#statusediturl").val("");
             } 
                 });
-
-    getFLXStatusAnnouncements();
     $(document).on('click','.sensitivestatus',async function(e)
       {
         Sdata=$(this).attr("data-index"); 
@@ -488,11 +498,37 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
     };
   }
 }
-
+async function getadminfromsite() {
+  $(".loader-section").show();
+  var AdminInfo = [];
+  await sp.web.siteGroups
+    .getByName("FLX Admins")
+    .users.get()
+    .then(function (result) {
+      for (var i = 0; i < result.length; i++) {
+        AdminInfo.push({
+          Title: result[i].Title,
+          ID: result[i].Id,
+          Email: result[i].Email,
+        });
+      }
+      FilteredAdmin = AdminInfo.filter((admin)=>{return (admin.Email == currentuser)});
+      console.log(FilteredAdmin);
+      getFLXStatusAnnouncements();
+    })
+    .catch(function (err) {
+      alert("Group not found: " + err);
+      $(".loader-section").hide();
+    });
+    $(".loader-section").hide();
+}
 async function getFLXStatusAnnouncements()
 {
   $(".loader-section").show();
-
+  $("#ShowVisiblestatus").hide();
+  $("#ViewAllstatus").show();
+  allitems=[];
+  Filename=[];
   // if(FLXStatusAnnouncements)
   // {
     await sp.web.lists.getByTitle("FLXStatusAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
@@ -624,8 +660,19 @@ async function getFLXStatusAnnouncements()
   }
    
   }
-  $("#statusannouncement-one").html("");
-  $("#statusannouncement-one").html(htmlforstatusannouncement);
+  if (FilteredAdmin.length>0) 
+        {
+          $("#statusannouncement-one").html("");
+          $("#statusannouncement-one").html(htmlforstatusannouncement);
+        }
+        else{
+          $("#statusannouncement-one").html("");
+          $("#statusannouncement-one").html(htmlforstatusannouncement);
+          $("#ViewAllstatus").hide();
+          $("#ShowVisiblestatus").hide();
+          $("#statusAnABtnDelete").hide();
+          $("#statusbtnupdate").hide();
+        }
     }).catch((error)=>
     {
       console.log(error);
@@ -912,3 +959,149 @@ function mandatoryforupdateItemsUrl() {
   // }   
   return isAllvalueFilled;
 }
+async function getFLXStatusAnnouncementsAll()
+{
+  $(".loader-section").show();
+  $("#ShowVisiblestatus").show();
+  $("#ViewAllstatus").hide();
+  allitems=[];
+  Filename=[];
+  // if(FLXStatusAnnouncements)
+  // {
+    await sp.web.lists.getByTitle("FLXStatusAnnouncements").items.select("*").get().then(async (item)=>
+    {
+  var htmlforstatusannouncement="";
+  allitems=item;
+  console.log(allitems);
+  if(item.length  == 0){
+    
+    $("#statusannouncement-list").html(`<div class="text-center pt-5">No Items Available</div>`)
+  }
+  for(var i=0;i<item.length;i++){
+    Filename.push(item[i].Url.split('/').pop());
+    console.log("Filename");
+  console.log(Filename);
+  
+    if(item[i].SensitiveDocument==true){ 
+    if(item[i].Openanewtab==true){ 
+      if (Filename[i].split(".").pop() == "pdf")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+  
+  }
+  
+  else {
+    if (Filename[i].split(".").pop() == "pdf")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivestatus" data-bs-toggle="modal" data-bs-target="#SensitiveModalstatus" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+  }
+  }
+  
+  else{
+    if(item[i].Openanewtab==true){ 
+      if (Filename[i].split(".").pop() == "pdf")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+  
+  }
+  
+  else {
+    if (Filename[i].split(".").pop() == "pdf")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+      else
+      {
+        htmlforstatusannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#statusannouncementModalEdit"></div></li>`;
+      }
+  } 
+  }
+   
+  }
+  $("#statusannouncement-one").html("");
+  $("#statusannouncement-one").html(htmlforstatusannouncement);
+    }).catch((error)=>
+    {
+      console.log(error);
+    });
+    $(".loader-section").hide();
+  }

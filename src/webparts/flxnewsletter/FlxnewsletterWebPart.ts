@@ -34,6 +34,8 @@ var editdata='';
 var urlFile = "";
 var updateUrlFile = "";
 var Sdata="";
+var FilteredAdmin =[];
+var currentuser = "";
 export interface IFlxnewsletterWebPartProps {
   description: string;
 }
@@ -49,6 +51,7 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
 
   public render(): void {
     siteURL = this.context.pageContext.web.absoluteUrl;
+    currentuser = this.context.pageContext.user.email;
     this.domElement.innerHTML = `
     <div class="loader-section" style="display:none"> 
     <div class="loader"></div>  
@@ -166,7 +169,8 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
   </div>
 </div>
 <div class="viewallannounce d-flex justify-content-end">
-    <a href="#" class="info"  class="color-info" data-bs-toggle="modal" data-bs-target="#exampleModalscrollthreeone" >View All</a>
+<a href="#" class="info"  class="color-info"  id="ViewAllnews">View All</a>
+<a href="#" class="info"  class="color-info"  id="ShowVisiblenews">Show Visible</a>
     </div>
 
     <div class="border announcement-sec">
@@ -291,7 +295,15 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
 
 
       `;
-      //$("#newsheaderTitle").text(headerTitle)
+      getadminfromsite();
+      $("#ShowVisiblenews").hide();
+      $("#ViewAllnews").show();
+      $("#ViewAllnews").click(()=>{
+        getFLXNewsLetterAnnouncementsAll();
+      });
+      $("#ShowVisiblenews").click(()=>{
+        getFLXNewsLetterAnnouncements();
+      });
     $("#newsAnABtnDelete").click(()=>{
       $(".announcement-modal-dialog").hide();
     });
@@ -322,8 +334,6 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
               $("#newsediturl").val("");
             }
                 });
-
-    getFLXNewsLetterAnnouncements();
     $(document).on('click','.sensitivenews',async function(e)
       {
         Sdata=$(this).attr("data-index"); 
@@ -490,12 +500,38 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
     };
   }
 }
-
+async function getadminfromsite() {
+  $(".loader-section").show();
+  var AdminInfo = [];
+  await sp.web.siteGroups
+    .getByName("FLX Admins")
+    .users.get()
+    .then(function (result) {
+      for (var i = 0; i < result.length; i++) {
+        AdminInfo.push({
+          Title: result[i].Title,
+          ID: result[i].Id,
+          Email: result[i].Email,
+        });
+      }
+      FilteredAdmin = AdminInfo.filter((admin)=>{return (admin.Email == currentuser)});
+      console.log(FilteredAdmin);
+      getFLXNewsLetterAnnouncements();
+    })
+    .catch(function (err) {
+      alert("Group not found: " + err);
+      $(".loader-section").hide();
+    });
+    $(".loader-section").hide();
+}
 
 async function getFLXNewsLetterAnnouncements()
 {
   $(".loader-section").show();
-
+  $("#ShowVisiblenews").hide();
+  $("#ViewAllnews").show();
+  allitems=[];
+  Filename=[];
   // if(FLXNewsLetterAnnouncements)
   // {
     await sp.web.lists.getByTitle("FLXNewsLetterAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
@@ -627,8 +663,19 @@ async function getFLXNewsLetterAnnouncements()
   }
    
   }
-  $("#newsannouncement-one").html("");
-  $("#newsannouncement-one").html(htmlfornewsannouncement);
+  if (FilteredAdmin.length>0) 
+        {
+          $("#newsannouncement-one").html("");
+          $("#newsannouncement-one").html(htmlfornewsannouncement);
+        }
+        else{
+          $("#newsannouncement-one").html("");
+          $("#newsannouncement-one").html(htmlfornewsannouncement);
+          $("#ViewAllnews").hide();
+          $("#ShowVisiblenews").hide();
+          $("#newsAnABtnDelete").hide();
+          $("#newsbtnupdate").hide();
+        }
     }).catch((error)=>
     {
       console.log(error);
@@ -916,5 +963,150 @@ function mandatoryforupdateItems() {
   return isAllvalueFilled;
 }
   
-
+async function getFLXNewsLetterAnnouncementsAll()
+{
+  $(".loader-section").show();
+  $("#ShowVisiblenews").show();
+  $("#ViewAllnews").hide();
+  allitems=[];
+  Filename=[];
+  // if(FLXNewsLetterAnnouncements)
+  // {
+    await sp.web.lists.getByTitle("FLXNewsLetterAnnouncements").items.select("*").get().then(async (item)=>
+    {
+  var htmlfornewsannouncement="";
+  allitems=item;
+  console.log(allitems);
+  if(item.length  == 0){
+    
+    $("#newsannouncement-list").html(`<div class="text-center pt-5">No Items Available</div>`)
+  }
+  for(var i=0;i<item.length;i++){
+    Filename.push(item[i].Url.split('/').pop());
+    console.log("Filename");
+  console.log(Filename);
+  
+    if(item[i].SensitiveDocument==true){
+    if(item[i].Openanewtab==true){
+      if (Filename[i].split(".").pop() == "pdf")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+  
+  }
+  
+  else {
+    if (Filename[i].split(".").pop() == "pdf")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" class="col-8 sensitivenews" data-bs-toggle="modal" data-bs-target="#SensitiveModalnews" data-index=${i}>${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+  }
+  }
+  
+  else{
+    if(item[i].Openanewtab==true){ 
+      if (Filename[i].split(".").pop() == "pdf")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a data-interception="off" href="${item[i].Url}" target="_blank" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+  
+  }
+  
+  else {
+    if (Filename[i].split(".").pop() == "pdf")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-pdf mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "ppt" || Filename[i].split(".").pop() == "pptx")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-ppt mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "doc" || Filename[i].split(".").pop() == "docx")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-doc mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "xlsx" || Filename[i].split(".").pop() == "csv")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-excel mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else if (Filename[i].split(".").pop() == "png" || Filename[i].split(".").pop() == "jpg" || Filename[i].split(".").pop() == "jpeg")
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-img mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+      else
+      {
+        htmlfornewsannouncement+=`<li class="py-2 px-4 d-flex align-items-center row"><span class="announce-icon announce-new mx-1 col-1"></span><a href="${item[i].Url}" class="col-8">${item[i].Title}</a><div class="icon-edit-announce col-2" data-id=${i} data-bs-toggle="modal" data-bs-target="#newsannouncementModalEdit"></div></li>`;
+      }
+  } 
+  }
+   
+  }
+  $("#newsannouncement-one").html("");
+  $("#newsannouncement-one").html(htmlfornewsannouncement);
+    }).catch((error)=>
+    {
+      console.log(error);
+    });
+    $(".loader-section").hide();
+  }
 

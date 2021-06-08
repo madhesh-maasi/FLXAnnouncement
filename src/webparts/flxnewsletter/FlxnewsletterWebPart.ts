@@ -175,7 +175,7 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
 
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="newsheaderTitle">Quarterly Newsletter</h5>
-    <div class="add-announcements px-4 py-1 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#newsannouncementModal">+ Add newsletter</a></div>
+    <div class="add-announcements px-4 py-1 border-bottom" id="add-news"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#newsannouncementModal">+ Add newsletter</a></div>
     <div id="newsannouncement-list" class="announcement-list">  
     <ul class="list-unstyled" id="newsannouncement-one"> 
     
@@ -673,8 +673,8 @@ async function getFLXNewsLetterAnnouncements()
           $("#newsannouncement-one").html(htmlfornewsannouncement);
           $("#ViewAllnews").hide();
           $("#ShowVisiblenews").hide();
-          $("#newsAnABtnDelete").hide();
-          $("#newsbtnupdate").hide();
+          $(".icon-edit-announce").hide();
+          $("#add-news").hide();
         }
     }).catch((error)=>
     {

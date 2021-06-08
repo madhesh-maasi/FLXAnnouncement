@@ -174,7 +174,7 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
     </div>
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="dealsheaderTitle">Deals - Curated Solutions for Business Solutions</h5>
-    <div class="add-announcements px-4 py-1 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#dealsannouncementModal">+ Add deals</a></div>
+    <div class="add-announcements px-4 py-1 border-bottom" id="add-deals"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#dealsannouncementModal">+ Add deals</a></div>
     <div id="dealsannouncement-list" class="announcement-list">  
     <ul class="list-unstyled" id="dealsannouncement-one"> 
     
@@ -676,8 +676,8 @@ async function getFLXDealsAnnouncements()
           $("#dealsannouncement-one").html(htmlfordealsannouncement);
           $("#ViewAlldeals").hide();
           $("#ShowVisibledeals").hide();
-          $("#dealsAnABtnDelete").hide();
-          $("#dealsbtnupdate").hide();
+          $(".icon-edit-announce").hide();
+          $("#add-deals").hide();  
         }
     }).catch((error)=>
     {

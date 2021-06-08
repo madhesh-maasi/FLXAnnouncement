@@ -173,7 +173,7 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
     </div>
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="whiteheaderTitle">White Papers We Announce</h5>
-    <div class="add-announcements px-4 py-1 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#whiteannouncementModal">+ Add white papers</a></div>
+    <div class="add-announcements px-4 py-1 border-bottom" id="add-white"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#whiteannouncementModal">+ Add white papers</a></div>
     <div id="whiteannouncement-list" class="announcement-list">  
     <ul class="list-unstyled" id="whiteannouncement-one"> 
     
@@ -669,8 +669,8 @@ async function getFLXWhitePaperAnnouncements()
           $("#whiteannouncement-one").html(htmlforwhiteannouncement);
           $("#ViewAllwhite").hide();
           $("#ShowVisiblewhite").hide();
-          $("#whiteAnABtnDelete").hide();
-          $("#whitebtnupdate").hide();
+          $(".icon-edit-announce").hide();
+          $("#add-white").hide();
         }
     }).catch((error)=>
     {

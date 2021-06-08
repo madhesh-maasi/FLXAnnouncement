@@ -175,7 +175,7 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
     </div>  
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="statusheaderTitle">LinkedIn Status/Website Status/MembershipStatus</h5>
-    <div class="add-announcements px-4 py-1 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#statusannouncementModal">+ Add status</a></div>
+    <div class="add-announcements px-4 py-1 border-bottom" id="add-status"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#statusannouncementModal">+ Add status</a></div>
     <div id="statusannouncement-list" class="announcement-list">  
     <ul class="list-unstyled" id="statusannouncement-one"> 
     
@@ -670,8 +670,8 @@ async function getFLXStatusAnnouncements()
           $("#statusannouncement-one").html(htmlforstatusannouncement);
           $("#ViewAllstatus").hide();
           $("#ShowVisiblestatus").hide();
-          $("#statusAnABtnDelete").hide();
-          $("#statusbtnupdate").hide();
+          $(".icon-edit-announce").hide();
+          $("#add-status").hide();
         }
     }).catch((error)=>
     {

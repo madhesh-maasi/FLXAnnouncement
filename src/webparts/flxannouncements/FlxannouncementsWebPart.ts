@@ -191,7 +191,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     </div>
     <div class="border announcement-sec">           
     <h5 class="bg-secondary text-light px-4 py-2" id="headerTitle">Monthly Announcements</h5>
-    <div class="add-announcements px-4 py-1 border-bottom">
+    <div class="add-announcements px-4 py-1 border-bottom" id="add-announcements">
     <a class="text-info cursor " data-bs-toggle="modal" data-bs-target="#announcementModal">+ Add announcements</a>
     </div>
     <div id="announcement-list" class="announcement-list">    
@@ -797,8 +797,8 @@ async function getFLXAnnouncements()
           $("#announcement-one").html(htmlforannouncement);
           $("#ViewAll").hide();
           $("#ShowVisible").hide();
-          $("#AnABtnDelete").hide();
-          $("#btnupdate").hide();
+          $(".icon-edit-announce").hide();
+          $("#add-announcements").hide();  
         }
     }).catch((error)=>
     {

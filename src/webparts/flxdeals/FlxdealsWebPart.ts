@@ -682,6 +682,7 @@ async function getFLXDealsAnnouncements()
     }).catch((error)=>
     {
       console.log(error);
+      $(".loader-section").hide();
     });
     $(".loader-section").hide();
 
@@ -729,7 +730,7 @@ async function getFLXDealsAnnouncements()
                 .catch(function (error) {
                   // ErrorCallBack(error, "addItems");
                   console.log(error);
-                  
+                  $(".loader-section").hide();
                 });
               })
           });
@@ -759,7 +760,7 @@ async function getFLXDealsAnnouncements()
       .catch(function (error) {
         // ErrorCallBack(error, "addItems");
         console.log(error);
-        
+        $(".loader-section").hide();
       });
     }
     $(".loader-section").hide();
@@ -803,7 +804,7 @@ console.log(FileuploadEdit);
                 .catch(function (error) {
                   // ErrorCallBack(error, "updateItems");
                   console.log(error);
-                  
+                  $(".loader-section").hide();
                 });
               })
           }); 
@@ -831,7 +832,7 @@ console.log(FileuploadEdit);
       .catch(function (error) {
         // ErrorCallBack(error, "updateItems");
         console.log(error);
-        
+        $(".loader-section").hide();
       });
     }else if(FileuploadEdit.length == 0 && updateUrlFile == "File" && SelectedFileName == ""){
       $(".uploadedFiledeals").html(`<p class="text-danger">File Cannot be Empty</p>`)
@@ -855,7 +856,7 @@ console.log(FileuploadEdit);
       .catch(function (error) {
         // ErrorCallBack(error, "updateItems");
         console.log(error);
-        
+        $(".loader-section").hide();
       }); 
 
     } 
@@ -1114,6 +1115,7 @@ async function getFLXDealsAnnouncementsAll()
     }).catch((error)=>
     {
       console.log(error);
+      $(".loader-section").hide();
     });
     $(".loader-section").hide();
 

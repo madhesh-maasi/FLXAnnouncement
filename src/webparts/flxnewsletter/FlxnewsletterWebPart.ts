@@ -679,6 +679,7 @@ async function getFLXNewsLetterAnnouncements()
     }).catch((error)=>
     {
       console.log(error);
+      $(".loader-section").hide();
     });
     $(".loader-section").hide();
   }
@@ -724,7 +725,7 @@ async function getFLXNewsLetterAnnouncements()
                 .catch(function (error) {
                   // ErrorCallBack(error, "addItems");
                   console.log(error);
-                  
+                  $(".loader-section").hide();
                 });
               })
           });
@@ -754,7 +755,7 @@ async function getFLXNewsLetterAnnouncements()
       .catch(function (error) {
         // ErrorCallBack(error, "addItems");
         console.log(error);
-        
+        $(".loader-section").hide();
       });
     }
     $(".loader-section").hide();
@@ -796,7 +797,7 @@ console.log(FileuploadEdit);
                 .catch(function (error) {
                   // ErrorCallBack(error, "updateItems");
                   console.log(error);
-                  
+                  $(".loader-section").hide();
                 });
               })
           }); 
@@ -824,7 +825,7 @@ console.log(FileuploadEdit);
       .catch(function (error) {
         // ErrorCallBack(error, "updateItems");
         console.log(error);
-        
+        $(".loader-section").hide();
       });
     }else if(FileuploadEdit.length == 0 && updateUrlFile == "File" && SelectedFileName == ""){
       $(".uploadedFilenews").html(`<p class="text-danger">File Cannot be Empty</p>`)
@@ -848,7 +849,7 @@ console.log(FileuploadEdit);
       .catch(function (error) {
         // ErrorCallBack(error, "updateItems");
         console.log(error);
-        
+        $(".loader-section").hide();
       }); 
 
     } 
@@ -1106,6 +1107,7 @@ async function getFLXNewsLetterAnnouncementsAll()
     }).catch((error)=>
     {
       console.log(error);
+      $(".loader-section").hide();
     });
     $(".loader-section").hide();
   }

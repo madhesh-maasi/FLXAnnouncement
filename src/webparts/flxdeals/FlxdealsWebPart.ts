@@ -65,11 +65,11 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
         <h5 class="modal-title fw-bold w-100 text-center" id="dealsannouncementModalLabel">Add Deals Announcement</h5>
       </div> 
       <div class="modal-body announcement-modal"> 
-        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7">
+        <div class="row align-items-center my-3"><div class="col-4 titleannouncements">Title</div><div class="col-1">:</div><div class="col-7">
         <input class="form-control rounded-0" type="text" id="dealstxttitle"></div></div>
         
         
-        <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
+        <div class="row align-items-center my-3"><div class="col-4 titleannouncements">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
         
         <label><input type="radio" class="radioc" name="urlFile" id="dealsurlRadio" value="Url"> Url </label>
         <label><input type="radio"  class="radioc" name="urlFile" id="dealsfileRadio" value="File"> File</label>
@@ -79,8 +79,8 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
         </div></div>
 
 
-        <div class="row align-items-center my-3 radioToggle" id="dealsurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="dealstxturl"></div></div>
-        <div class="row align-items-center my-3 radioToggle" id="dealsfileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="dealsuploadfile"></div></div>
+        <div class="row align-items-center my-3 radioToggle" id="dealsurlSection" style="display:none"><div class="col-4 titleannouncements">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="dealstxturl"></div></div>
+        <div class="row align-items-center my-3 radioToggle" id="dealsfileSection" style="display:none"><div class="col-4 titleannouncements">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="dealsuploadfile"></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Document/Url Properties</div><div class="col-1">:</div><div class="col-7">
   
         <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
@@ -104,7 +104,7 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
     </div>
   </div>
 </div>   
-
+  
 <div class="modal fade" id="dealsannouncementModalEdit" tabindex="-1" aria-labelledby="announcementModalLabel" aria-hidden="true">
 <div class="modal-dialog announcement-modal-dialog">
   <div class="modal-content rounded-0">
@@ -113,13 +113,13 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
     </div>  
     <div class="modal-body announcement-modal"> 
-      <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="dealsedittitle"></div></div>
-      <!--<div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
+      <div class="row align-items-center my-3"><div class="col-4 titleannouncements">Title</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="dealsedittitle"></div></div>
+      <!--<div class="row align-items-center my-3"><div class="col-4 titleannouncements">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
         <label><input type="radio" class="Eradioc" name="EurlFile" id="dealssEurlRadio" value="Url"> Url </label>
         <label><input type="radio"  class="Eradioc" name="EurlFile" id="dealsEfileRadio" value="File"> File</label>
         </div></div>-->
-      <div class="row align-items-center my-3" id="dealsEurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="dealsediturl"></div></div>
-      <div class="row align-items-start my-3" id="dealsEfileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7" id="dealseditFUploadSec"><div><input class="form-control-file custom-file-upload" type="file" id="dealsuploadfileedit"></div><div class="uploadedFiledeals mt-1"></div></div></div>
+      <div class="row align-items-center my-3" id="dealsEurlSection" style="display:none"><div class="col-4 titleannouncements">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="dealsediturl"></div></div>
+      <div class="row align-items-start my-3" id="dealsEfileSection" style="display:none"><div class="col-4 titleannouncements">File</div><div class="col-1">:</div><div class="col-7" id="dealseditFUploadSec"><div><input class="form-control-file custom-file-upload" type="file" id="dealsuploadfileedit"></div><div class="uploadedFiledeals mt-1"></div></div></div>
       <div class="row align-items-center my-3"><div class="col-4">Document/Url Properties</div><div class="col-1">:</div><div class="col-7">
   
       <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
@@ -165,7 +165,9 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
     </div>
   </div>
 </div>
-
+<div class="viewallannounce d-flex justify-content-end">
+    <a href="#" class="info"  class="color-info" data-bs-toggle="modal" data-bs-target="#exampleModalscroll2one" >View All</a>
+    </div>
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="dealsheaderTitle">Deals - Curated Solutions for Business Solutions</h5>
     <div class="add-announcements px-4 py-1 border-bottom"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#dealsannouncementModal">+ Add deals</a></div>
@@ -199,7 +201,91 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
                </div>
              </div>
            </div> 
-           <!-- sensitive Modal -->
+           <!-- sensitive Modal -->  
+
+           <div class="modal fade" id="exampleModalscroll2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+           <div class="modal-dialog   modal-dialog-scrollable"">  
+             <div class="modal-content rounded-0">
+               <div class="modal-header">      
+                 <h5 class="modal-title fw-bold w-100 text-center" id="exampleModalLabel">Deals - Curated Solutions for Business Solutions</h5>
+             <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  -->
+               </div>     
+               <div class="modal-body viewallmodal">
+               <div class="viewallanounce">
+               <ul class="list-unstyled">   
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>
+               </li>     
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>  
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>  
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>  
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>  
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>  
+               </li>
+               <li class="d-flex align-items-center row my-3">
+               <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+               <span class="icon-edit-announce col-2"></span>  
+               </li>
+               
+              
+               </ul> 
+               </div>
+               </div>
+               <div class="modal-footer"> 
+                 <button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal" id="btnclose">Close</button>
+                 <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnsubmit">Submit</button> 
+               </div>        
+             </div>
+           </div>
+         </div>
+          
     `;
     //$("#dealsheaderTitle").text(headerTitle)
     $("#dealsAnABtnDelete").click(()=>{

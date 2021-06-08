@@ -62,6 +62,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
     <div class="loader"></div>  
     </div></div> 
     <div class="cont"> 
+    
      
     <div class="row announcements-section">
     <div class="col-6 announcement p-0">
@@ -74,23 +75,23 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
        
       </div> 
       <div class="modal-body announcement-modal"> 
-        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7">
+        <div class="row align-items-center my-3"><div class="col-4 titleannouncements">Title</div><div class="col-1">:</div><div class="col-7">
         <input class="form-control rounded-0" type="text" id="txttitle"></div></div>
         
         
-        <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
-        
+        <div class="row align-items-center my-3"><div class="col-4 titleannouncements">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
+            
         <label><input type="radio" class="radioc" name="urlFile" id="urlRadio" value="Url"> Url </label>
         <label><input type="radio"  class="radioc" name="urlFile" id="fileRadio" value="File"> File</label>
 
-
+  
         
         </div></div>
 
 
-        <div class="row align-items-center my-3 radioToggle" id="urlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="txturl"></div></div>
-        <div class="row align-items-center my-3 radioToggle" id="fileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="uploadfile"></div></div>
-        <div class="row align-items-center my-3"><div class="col-4">Document/Url Properties</div><div class="col-1">:</div><div class="col-7">
+        <div class="row align-items-center my-3 radioToggle" id="urlSection" style="display:none"><div class="col-4 titleannouncements">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="txturl"></div></div>
+        <div class="row align-items-center my-3 radioToggle" id="fileSection" style="display:none"><div class="col-4 titleannouncements">File</div><div class="col-1">:</div><div class="col-7"><input class="form-control-file custom-file-upload" type="file" id="uploadfile"></div></div>
+        <div class="row align-items-center my-3"><div class="col-4 ">Document/Url Properties</div><div class="col-1">:</div><div class="col-7">
   
         <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
 
@@ -125,16 +126,16 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
     </div>  
     <div class="modal-body announcement-modal"> 
-      <div class="row align-items-center my-3"><div class="col-4">Title</div>
+      <div class="row align-items-center my-3"><div class="col-4 titleannouncements">Title</div>
       <div class="col-1">:</div><div class="col-7"><input class="form-control rounded-0" type="text" id="edittitle"></div></div>
 
       <!--<div class="row align-items-center my-3"><div class="col-4">Attachment URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="attachurl"></div></div>
-      <div class="row align-items-center my-3"><div class="col-4">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
+      <div class="row align-items-center my-3"><div class="col-4 titleannouncements">Source</div><div class="col-1">:</div><div class="col-7 clsRadioSec">
         <label><input type="radio" class="Eradioc" name="EurlFile" id="EurlRadio" value="Url"> Url </label>
         <label><input type="radio"  class="Eradioc" name="EurlFile" id="EfileRadio" value="File"> File</label>
         </div></div>-->
-      <div class="row align-items-center my-3" id="EurlSection" style="display:none"><div class="col-4">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="editurl"></div></div>
-      <div class="row align-items-start my-3" id="EfileSection" style="display:none"><div class="col-4">File</div><div class="col-1">:</div><div class="col-7" id="editFUploadSec"><div><input class="form-control-file custom-file-upload" type="file" id="uploadfileedit"></div><div class="uploadedFile mt-1"></div></div></div>
+      <div class="row align-items-center my-3" id="EurlSection" style="display:none"><div class="col-4 titleannouncements">URL</div><div class="col-1">:</div><div class="col-7"><input class="form-control" type="text" id="editurl"></div></div>
+      <div class="row align-items-start my-3" id="EfileSection" style="display:none"><div class="col-4 titleannouncements">File</div><div class="col-1">:</div><div class="col-7" id="editFUploadSec"><div><input class="form-control-file custom-file-upload" type="file" id="uploadfileedit"></div><div class="uploadedFile mt-1"></div></div></div>
       <div class="row align-items-center my-3"><div class="col-4">Document/Url Properties</div><div class="col-1">:</div><div class="col-7">
   
       <div class="btn-group option-checkboxes w-100" role="group" aria-label="Basic checkbox toggle button group">
@@ -178,10 +179,12 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
         <button type="button" id="cancelAnADelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
         <button type="button" id="confirmAnADelete" class="btn btn-sm btn-danger rounded-0 ">Yes</button>
       </div>
-    </div>
+    </div>  
   </div> 
-</div>  
-
+</div>     
+<div class="viewallannounce d-flex justify-content-end">
+    <a href="#" class="info"  class="color-info" data-bs-toggle="modal" data-bs-target="#exampleModalscrollone" >View All</a>
+    </div>
     <div class="border announcement-sec">           
     <h5 class="bg-secondary text-light px-4 py-2" id="headerTitle">Monthly Announcements</h5>
     <div class="add-announcements px-4 py-1 border-bottom">
@@ -278,6 +281,91 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
              </div>
            </div> 
            <!-- sensitive Modal -->
+           <!---viewall popup -->  
+
+<div class="modal fade" id="exampleModalscroll" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog   modal-dialog-scrollable"">  
+    <div class="modal-content rounded-0">
+      <div class="modal-header">      
+        <h5 class="modal-title fw-bold w-100 text-center" id="exampleModalLabel">Monthly Announcements</h5>
+    <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  -->
+      </div>     
+      <div class="modal-body viewallmodal">
+      <div class="viewallanounce">   
+      <ul class="list-unstyled">   
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>
+      </li>     
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>  
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>  
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>  
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>  
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>  
+      </li>
+      <li class="d-flex align-items-center row my-3">
+      <span class="announce-icon announce-icon announce-pdf col-1"></span><a href="#" class="col-8 p-0">FLX Announcements</a>
+      <span class="icon-edit-announce col-2"></span>  
+      </li>
+      
+       
+      </ul> 
+      </div>
+      </div>
+      <div class="modal-footer"> 
+        <button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal" id="btnclose">Close</button>
+        <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnsubmit">Submit</button> 
+      </div>        
+    </div>
+  </div>
+</div>
+               
       `;    
       //$("#headerTitle").text(headerTitle)
       $("#AnABtnDelete").click(()=>{

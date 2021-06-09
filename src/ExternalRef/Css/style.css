@@ -382,3 +382,11 @@ button.ajs-button.ajs-ok {
   background-color: #727272;
   border-radius: 20px;
 }
+.spannew{
+  color: #4BB543;
+  top: -6px;
+  left: 3px;
+  position: relative;
+  font-size: 0.8rem;
+  font-weight: 500;
+}

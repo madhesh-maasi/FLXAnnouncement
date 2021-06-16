@@ -192,7 +192,7 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
 </div>     
 <div class="viewallannounce d-flex justify-content-end">
     <a href="#" class="info"  class="color-info"  id="ViewAll">View All</a>
-    <a href="#" class="info"  class="color-info"  id="ShowVisible">Show Visible</a>
+    <a href="#" class="info"  class="color-info"  id="ShowVisible">End User View</a>
     </div>
     <div class="border announcement-sec">           
     <h5 class="bg-secondary text-light px-4 py-2" id="headerTitle">Monthly Announcements</h5>
@@ -669,7 +669,7 @@ async function getFLXAnnouncements()
 
   // if(FLXAnnouncement)
   // {
-    await sp.web.lists.getByTitle("FLXAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
+    await sp.web.lists.getByTitle("FLXAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").orderBy("Modified",false).get().then(async (item)=>
     {
   var htmlforannouncement="";
   allitems=item;
@@ -1151,7 +1151,7 @@ async function getFLXAnnouncementsAll()
   Filename=[];
   // if(FLXAnnouncement)
   // {
-    await sp.web.lists.getByTitle("FLXAnnouncements").items.select("*").get().then(async (item)=>
+    await sp.web.lists.getByTitle("FLXAnnouncements").items.select("*").orderBy("Modified",false).get().then(async (item)=>
     {
   var htmlforannouncement="";
   allitems=item;

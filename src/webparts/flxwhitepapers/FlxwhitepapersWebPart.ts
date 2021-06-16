@@ -173,7 +173,7 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
 </div>
 <div class="viewallannounce d-flex justify-content-end">
 <a href="#" class="info"  class="color-info"  id="ViewAllwhite">View All</a>
-<a href="#" class="info"  class="color-info"  id="ShowVisiblewhite">Show Visible</a>
+<a href="#" class="info"  class="color-info"  id="ShowVisiblewhite">End User View</a>
     </div>
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="whiteheaderTitle">White Papers We Announce</h5>
@@ -544,7 +544,7 @@ async function getFLXWhitePaperAnnouncements()
   Filename=[];
   // if(FLXWhitePaperAnnouncements)
   // {
-    await sp.web.lists.getByTitle("FLXWhitePaperAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
+    await sp.web.lists.getByTitle("FLXWhitePaperAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").orderBy("Modified",false).get().then(async (item)=>
     {
   var htmlforwhiteannouncement="";
   allitems=item;
@@ -1004,7 +1004,7 @@ async function getFLXWhitePaperAnnouncementsAll()
   Filename=[];
   // if(FLXWhitePaperAnnouncements)
   // {
-    await sp.web.lists.getByTitle("FLXWhitePaperAnnouncements").items.select("*").get().then(async (item)=>
+    await sp.web.lists.getByTitle("FLXWhitePaperAnnouncements").items.select("*").orderBy("Modified",false).get().then(async (item)=>
     {
   var htmlforwhiteannouncement="";
   allitems=item;

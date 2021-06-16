@@ -174,7 +174,7 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
 </div>
 <div class="viewallannounce d-flex justify-content-end">
 <a href="#" class="info"  class="color-info"  id="ViewAllnews">View All</a>
-<a href="#" class="info"  class="color-info"  id="ShowVisiblenews">Show Visible</a>
+<a href="#" class="info"  class="color-info"  id="ShowVisiblenews">End User View</a>
     </div>
 
     <div class="border announcement-sec">
@@ -548,7 +548,7 @@ async function getFLXNewsLetterAnnouncements()
   Filename=[];
   // if(FLXNewsLetterAnnouncements)
   // {
-    await sp.web.lists.getByTitle("FLXNewsLetterAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
+    await sp.web.lists.getByTitle("FLXNewsLetterAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").orderBy("Modified",false).get().then(async (item)=>
     {
   var htmlfornewsannouncement="";
   allitems=item;
@@ -1009,7 +1009,7 @@ async function getFLXNewsLetterAnnouncementsAll()
   Filename=[];
   // if(FLXNewsLetterAnnouncements)
   // {
-    await sp.web.lists.getByTitle("FLXNewsLetterAnnouncements").items.select("*").get().then(async (item)=>
+    await sp.web.lists.getByTitle("FLXNewsLetterAnnouncements").items.select("*").orderBy("Modified",false).get().then(async (item)=>
     {
   var htmlfornewsannouncement="";
   allitems=item;

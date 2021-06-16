@@ -175,7 +175,7 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
 </div>
 <div class="viewallannounce d-flex justify-content-end">
 <a href="#" class="info"  class="color-info"  id="ViewAllstatus">View All</a>
-<a href="#" class="info"  class="color-info"  id="ShowVisiblestatus">Show Visible</a>
+<a href="#" class="info"  class="color-info"  id="ShowVisiblestatus">End User View</a>
     </div>  
     <div class="border announcement-sec">
     <h5 class="bg-secondary text-light px-4 py-2" id="statusheaderTitle">LinkedIn Status/Website Status/MembershipStatus</h5>
@@ -545,7 +545,7 @@ async function getFLXStatusAnnouncements()
   Filename=[];
   // if(FLXStatusAnnouncements)
   // {
-    await sp.web.lists.getByTitle("FLXStatusAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").get().then(async (item)=>
+    await sp.web.lists.getByTitle("FLXStatusAnnouncements").items.select("*").filter("Visible eq '" + 1 + "'").orderBy("Modified",false).get().then(async (item)=>
     {
   var htmlforstatusannouncement="";
   allitems=item;
@@ -1005,7 +1005,7 @@ async function getFLXStatusAnnouncementsAll()
   Filename=[];
   // if(FLXStatusAnnouncements)
   // {
-    await sp.web.lists.getByTitle("FLXStatusAnnouncements").items.select("*").get().then(async (item)=>
+    await sp.web.lists.getByTitle("FLXStatusAnnouncements").items.select("*").orderBy("Modified",false).get().then(async (item)=>
     {
   var htmlforstatusannouncement="";
   allitems=item;

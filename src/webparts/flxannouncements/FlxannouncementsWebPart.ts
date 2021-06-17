@@ -626,7 +626,6 @@ export default class FlxannouncementsWebPart extends BaseClientSideWebPart<IFlxa
   }
 }
 async function getadminfromsite() {
-  $(".loader-section").show();
 
   var bag=[];
   let listLocation  = await sp.web.getList(listUrl + "Badging").items.get(); 
@@ -655,13 +654,10 @@ async function getadminfromsite() {
     })
     .catch(function (err) {
       alert("Group not found: " + err);
-      $(".loader-section").hide();
     });
-    $(".loader-section").hide();
 }
 async function getFLXAnnouncements()
 {
-  $(".loader-section").show();
   $("#ShowVisible").hide();
   $("#ViewAll").show();
   allitems=[];
@@ -840,9 +836,7 @@ async function getFLXAnnouncements()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
     });
-  $(".loader-section").hide();
 
   }
 
@@ -1144,7 +1138,6 @@ function mandatoryforupdateItems() {
 
 async function getFLXAnnouncementsAll()
 {
-  $(".loader-section").show();
   $("#ShowVisible").show();
   $("#ViewAll").hide();
   allitems=[];
@@ -1310,8 +1303,8 @@ async function getFLXAnnouncementsAll()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
+     
     });
-    $(".loader-section").hide();
+    
 
   }

@@ -501,7 +501,6 @@ export default class FlxwhitepapersWebPart extends BaseClientSideWebPart<IFlxwhi
   }
 }
 async function getadminfromsite() {
-  $(".loader-section").show();
 
   var bag=[];
   let listLocation  = await sp.web.getList(listUrl + "Badging").items.get(); 
@@ -530,14 +529,14 @@ async function getadminfromsite() {
     })
     .catch(function (err) {
       alert("Group not found: " + err);
-      $(".loader-section").hide();
+      
     });
-    $(".loader-section").hide();
+    
 }
 async function getFLXWhitePaperAnnouncements()
 {
 
-  $(".loader-section").show();
+  
   $("#ShowVisiblewhite").hide();
   $("#ViewAllwhite").show();
   allitems=[];
@@ -711,9 +710,9 @@ async function getFLXWhitePaperAnnouncements()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
+      
     });
-    $(".loader-section").hide();
+    
   }
   // else{
   //   $("#announcement-one").html("");
@@ -997,7 +996,6 @@ function mandatoryforupdateItems() {
 async function getFLXWhitePaperAnnouncementsAll()
 {
 
-  $(".loader-section").show();
   $("#ShowVisiblewhite").show();
   $("#ViewAllwhite").hide();
   allitems=[];
@@ -1160,9 +1158,8 @@ async function getFLXWhitePaperAnnouncementsAll()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
+     
     });
-    $(".loader-section").hide();
   }
 
 

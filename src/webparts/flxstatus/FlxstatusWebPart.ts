@@ -503,7 +503,6 @@ export default class FlxstatusWebPart extends BaseClientSideWebPart<IFlxstatusWe
   }
 }
 async function getadminfromsite() {
-  $(".loader-section").show();
 
   var bag=[];
   let listLocation  = await sp.web.getList(listUrl + "Badging").items.get(); 
@@ -532,13 +531,12 @@ async function getadminfromsite() {
     })
     .catch(function (err) {
       alert("Group not found: " + err);
-      $(".loader-section").hide();
+      
     });
-    $(".loader-section").hide();
+    
 }
 async function getFLXStatusAnnouncements()
 {
-  $(".loader-section").show();
   $("#ShowVisiblestatus").hide();
   $("#ViewAllstatus").show();
   allitems=[];
@@ -712,9 +710,8 @@ async function getFLXStatusAnnouncements()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
+      
     });
-    $(".loader-section").hide();
   }
   // else{
   //   $("#announcement-one").html("");
@@ -998,7 +995,6 @@ function mandatoryforupdateItemsUrl() {
 }
 async function getFLXStatusAnnouncementsAll()
 {
-  $(".loader-section").show();
   $("#ShowVisiblestatus").show();
   $("#ViewAllstatus").hide();
   allitems=[];
@@ -1161,7 +1157,7 @@ async function getFLXStatusAnnouncementsAll()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
+     
     });
-    $(".loader-section").hide();
+    
   }

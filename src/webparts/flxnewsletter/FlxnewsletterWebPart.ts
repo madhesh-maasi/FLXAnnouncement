@@ -505,7 +505,6 @@ export default class FlxnewsletterWebPart extends BaseClientSideWebPart<IFlxnews
   }
 }
 async function getadminfromsite() {
-  $(".loader-section").show();
 
   var bag=[];
   let listLocation  = await sp.web.getList(listUrl + "Badging").items.get(); 
@@ -534,14 +533,11 @@ async function getadminfromsite() {
     })
     .catch(function (err) {
       alert("Group not found: " + err);
-      $(".loader-section").hide();
     });
-    $(".loader-section").hide();
 }
 
 async function getFLXNewsLetterAnnouncements()
 {
-  $(".loader-section").show();
   $("#ShowVisiblenews").hide();
   $("#ViewAllnews").show();
   allitems=[];
@@ -715,9 +711,9 @@ async function getFLXNewsLetterAnnouncements()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
+      
     });
-    $(".loader-section").hide();
+    
   }
   // else{
   //   $("#announcement-one").html("");
@@ -1002,7 +998,6 @@ function mandatoryforupdateItems() {
   
 async function getFLXNewsLetterAnnouncementsAll()
 {
-  $(".loader-section").show();
   $("#ShowVisiblenews").show();
   $("#ViewAllnews").hide();
   allitems=[];
@@ -1165,8 +1160,8 @@ async function getFLXNewsLetterAnnouncementsAll()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
+      
     });
-    $(".loader-section").hide();
+    
   }
 

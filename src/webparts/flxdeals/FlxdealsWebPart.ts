@@ -508,7 +508,6 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
   }
 }
 async function getadminfromsite() {
-  $(".loader-section").show();
 
   var bag=[];
   let listLocation  = await sp.web.getList(listUrl + "Badging").items.get(); 
@@ -537,13 +536,10 @@ async function getadminfromsite() {
     })
     .catch(function (err) {
       alert("Group not found: " + err);
-      $(".loader-section").hide();
     });
-    $(".loader-section").hide();
 }
 async function getFLXDealsAnnouncements()
 {
-  $(".loader-section").show();
   $("#ShowVisibledeals").hide();
   $("#ViewAlldeals").show();
   allitems=[];
@@ -718,9 +714,7 @@ async function getFLXDealsAnnouncements()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
     });
-    $(".loader-section").hide();
 
   }
   // else{
@@ -1009,7 +1003,6 @@ function mandatoryforupdateItems() {
 
 async function getFLXDealsAnnouncementsAll()
 {
-  $(".loader-section").show();
   $("#ShowVisibledeals").show();
   $("#ViewAlldeals").hide();
   allitems=[];
@@ -1173,8 +1166,6 @@ async function getFLXDealsAnnouncementsAll()
     }).catch((error)=>
     {
       console.log(error);
-      $(".loader-section").hide();
     });
-    $(".loader-section").hide();
 
   }

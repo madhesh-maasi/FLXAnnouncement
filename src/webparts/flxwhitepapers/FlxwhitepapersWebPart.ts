@@ -13,6 +13,7 @@ SPComponentLoader.loadScript(
   "https://code.jquery.com/jquery-3.5.1.js"
 );
 
+
 import * as $ from "jquery";
 import * as moment from "moment";
 import styles from './FlxwhitepapersWebPart.module.scss';

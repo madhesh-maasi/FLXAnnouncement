@@ -8,7 +8,6 @@ import { escape } from '@microsoft/sp-lodash-subset';
 
 import { SPComponentLoader } from "@microsoft/sp-loader";
 
-
 SPComponentLoader.loadScript(
   // "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.4.min.js"
   "https://code.jquery.com/jquery-3.5.1.js"

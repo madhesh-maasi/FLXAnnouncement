@@ -530,7 +530,8 @@ async function getadminfromsite() {
       getFLXStatusAnnouncements();
     })
     .catch(function (err) {
-      alert("Group not found: " + err);
+      console.log(err);
+      //alert("Group not found: " + err);
       
     });
     

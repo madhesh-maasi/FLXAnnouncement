@@ -69,7 +69,7 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
   <div class="modal-dialog announcement-modal-dialog">
     <div class="modal-content rounded-0">
       <div class="modal-header">
-        <h5 class="modal-title fw-bold w-100 text-center" id="dealsannouncementModalLabel">Add Deals Announcement</h5>
+        <h5 class="modal-title fw-bold w-100 text-center" id="dealsannouncementModalLabel">Add Document</h5>
       </div> 
       <div class="modal-body announcement-modal"> 
         <div class="row align-items-center my-3"><div class="col-4 titleannouncements">Title</div><div class="col-1">:</div><div class="col-7">
@@ -116,7 +116,7 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
 <div class="modal-dialog announcement-modal-dialog">
   <div class="modal-content rounded-0">
     <div class="modal-header">
-      <h5 class="modal-title fw-bold w-100 text-center" id="dealsannouncementModalLabel">Edit Deals Announcement</h5>
+      <h5 class="modal-title fw-bold w-100 text-center" id="dealsannouncementModalLabel">Edit Document</h5>
      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
     </div>  
     <div class="modal-body announcement-modal"> 
@@ -177,8 +177,8 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
 <a href="#" class="info"  class="color-info"  id="ShowVisibledeals">End User View</a>
     </div>
     <div class="border announcement-sec">
-    <h5 class="bg-secondary text-light px-4 py-2" id="dealsheaderTitle">Deals - Curated Solutions for Business Solutions</h5>
-    <div class="add-announcements px-4 py-1 border-bottom" id="add-deals"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#dealsannouncementModal">+ Add deals</a></div>
+    <h5 class="bg-secondary text-light px-4 py-2" id="dealsheaderTitle">Sales, Placement & Proposal Reporting</h5>
+    <div class="add-announcements px-4 py-1 border-bottom" id="add-deals"><a class="text-info cursor" data-bs-toggle="modal" data-bs-target="#dealsannouncementModal">+ Add document</a></div>
     <div id="dealsannouncement-list" class="announcement-list">  
     <ul class="list-unstyled" id="dealsannouncement-one"> 
     
@@ -215,7 +215,7 @@ export default class FlxdealsWebPart extends BaseClientSideWebPart<IFlxdealsWebP
            <div class="modal-dialog   modal-dialog-scrollable"">  
              <div class="modal-content rounded-0">
                <div class="modal-header">      
-                 <h5 class="modal-title fw-bold w-100 text-center" id="exampleModalLabel">Deals - Curated Solutions for Business Solutions</h5>
+                 <h5 class="modal-title fw-bold w-100 text-center" id="exampleModalLabel">Sales, Placement & Proposal Reporting</h5>
              <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>  -->
                </div>     
                <div class="modal-body viewallmodal">
